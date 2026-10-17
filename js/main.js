@@ -31,9 +31,14 @@
   }
 
   function paintNav() {
-    nav.querySelectorAll("[data-mode]").forEach((button) => {
-      if (button.dataset.mode === state.mode) button.setAttribute("aria-current", "page");
-      else button.removeAttribute("aria-current");
+    nav.querySelectorAll("[data-mode]").forEach((link) => {
+      const on = link.dataset.mode === state.mode;
+      const item = link.closest("li");
+      if (item) item.classList.toggle("govuk-service-navigation__item--active", on);
+      if (on) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+      const label = link.dataset.label || link.textContent;
+      link.innerHTML = on ? '<strong class="govuk-service-navigation__active-fallback">' + label + "</strong>" : label;
     });
     const install = document.querySelector("#install");
     install.hidden = !state.install;
@@ -51,7 +56,7 @@
         let mark = "";
         if (state.picked) mark = choice.correct ? " right" : state.picked.index === index ? " wrong" : "";
         return (
-          '<button type="button" class="choice' +
+          '<button type="button" class="govuk-button govuk-button--secondary choice' +
           mark +
           '" data-act="choose" data-index="' +
           index +
@@ -61,36 +66,57 @@
         );
       })
       .join("");
-    const why = state.picked ? '<p class="why">' + UI.esc(step.choices[state.picked.index].why) + "</p>" : "";
+    let why = "";
+    if (state.picked) {
+      const text = UI.esc(step.choices[state.picked.index].why);
+      why = state.picked.correct
+        ? '<div class="govuk-inset-text">' + text + "</div>"
+        : '<p class="govuk-error-message"><span class="govuk-visually-hidden">Error: </span>' + text + "</p>";
+    }
     const last = state.step === lesson.steps.length - 1 && state.lesson === Lessons.lessons.length - 1;
     const nextLabel = last ? "Deal a hand" : "Next";
     const nextAct = last ? "deal" : "next-step";
+    const back =
+      state.step > 0 || state.lesson > 0
+        ? '<a class="govuk-back-link" href="#back" data-act="prev-step">Back</a>'
+        : "";
     pad.innerHTML =
-      '<p class="kicker">Lesson ' +
+      back +
+      '<p class="govuk-caption-m">Lesson ' +
       (state.lesson + 1) +
       " of " +
       Lessons.lessons.length +
       "</p>" +
-      "<h2>" +
+      '<h1 class="govuk-heading-l">' +
       UI.esc(lesson.title) +
-      "</h2>" +
-      '<ol class="lesson-dots">' +
-      Lessons.lessons.map((_, index) => {
-        const cls = index === state.lesson ? "on" : index < state.lesson ? "done" : "";
-        return '<li><button type="button" data-act="goto-lesson" data-lesson="' + index + '" class="' + cls + '" aria-label="Lesson ' + (index + 1) + '"></button></li>';
-      }).join("") +
+      "</h1>" +
+      '<ol class="lesson-index">' +
+      Lessons.lessons
+        .map((_, index) => {
+          const current = index === state.lesson ? ' aria-current="page"' : "";
+          const text = index === state.lesson ? "<strong>" + (index + 1) + "</strong>" : String(index + 1);
+          return (
+            '<li><a class="govuk-link" href="#lesson-' +
+            (index + 1) +
+            '" data-act="goto-lesson" data-lesson="' +
+            index +
+            '"' +
+            current +
+            ">" +
+            text +
+            "</a></li>"
+          );
+        })
+        .join("") +
       "</ol>" +
-      '<p class="coach">' +
+      '<p class="govuk-body">' +
       UI.esc(step.coach) +
       "</p>" +
       '<div class="choices">' +
       choices +
       "</div>" +
       why +
-      '<div class="row">' +
-      (state.step > 0 || state.lesson > 0 ? '<button type="button" data-act="prev-step">Back</button>' : "") +
-      (state.picked ? '<button type="button" class="primary" data-act="' + nextAct + '">' + nextLabel + "</button>" : "") +
-      "</div>";
+      (state.picked ? '<button type="button" class="govuk-button" data-act="' + nextAct + '">' + nextLabel + "</button>" : "");
   }
 
   function renderRules() {
@@ -104,7 +130,7 @@
     if (!state.match) {
       felt.innerHTML = UI.feltHTML(emptyTable());
       pad.innerHTML =
-        '<p class="kicker">A hand</p><h2>Sit down</h2><p class="coach">You are at the bottom. Partner is across. Left deals the first hand, so you bid first. Four cards, then a promise, then four more.</p><div class="row"><button type="button" class="primary" data-act="deal">Deal</button></div>';
+        '<p class="govuk-caption-m">A hand</p><h1 class="govuk-heading-l">Sit down</h1><p class="govuk-body">You are at the bottom. Partner is across. Left deals the first hand, so you bid first. Four cards, then a promise, then four more.</p><button type="button" class="govuk-button" data-act="deal">Deal</button>';
       return;
     }
     const match = state.match;
@@ -117,28 +143,34 @@
       dim: !!(playable && hand.turnSeat === "S" && !state.auto),
     });
     const coach = state.quiet ? firstSentence(TN.coachLine(match, "S")) : TN.coachLine(match, "S");
-    const flash = state.flash ? '<p class="flash">' + UI.esc(state.flash) + "</p>" : "";
+    const flash = state.flash
+      ? '<p class="govuk-error-message"><span class="govuk-visually-hidden">Error: </span>' + UI.esc(state.flash) + "</p>"
+      : "";
     const log = hand.log
       .slice(-6)
       .map((line) => "<li>" + UI.esc(line) + "</li>")
       .join("");
     pad.innerHTML =
-      '<p class="kicker">' +
+      '<p class="govuk-caption-m">' +
       UI.esc(kicker(hand)) +
-      "</p><h2>" +
+      '</p><h1 class="govuk-heading-l">' +
       UI.esc(title(hand)) +
-      "</h2>" +
+      "</h1>" +
       flash +
-      '<p class="coach">' +
+      '<p class="govuk-body">' +
       UI.esc(coach) +
       "</p>" +
       '<div class="choices">' +
       controls(hand) +
       "</div>" +
-      '<label class="quiet"><input type="checkbox" data-act="quiet"' +
+      '<div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">' +
+      '<div class="govuk-checkboxes__item">' +
+      '<input class="govuk-checkboxes__input" id="quiet" type="checkbox" data-act="quiet"' +
       (state.quiet ? " checked" : "") +
-      "> Shorter notes</label>" +
-      (log ? '<ol class="log">' + log + "</ol>" : "");
+      ">" +
+      '<label class="govuk-label govuk-checkboxes__label" for="quiet">Shorter notes</label>' +
+      "</div></div>" +
+      (log ? '<h2 class="govuk-heading-s">This hand</h2><ul class="govuk-list govuk-list--bullet log">' + log + "</ul>" : "");
     scheduleBots();
   }
 
@@ -217,46 +249,47 @@
 
   function controls(hand) {
     if (hand.phase === "annulled" || hand.phase === "handEnd") {
-      return '<button type="button" class="primary" data-act="continue">Deal the next hand</button>';
+      return '<button type="button" class="govuk-button" data-act="continue">Deal the next hand</button>';
     }
     if (hand.phase === "matchEnd") {
-      return '<button type="button" class="primary" data-act="newmatch">New match</button>';
+      return '<button type="button" class="govuk-button" data-act="newmatch">New match</button>';
     }
-    if (state.auto) return '<button type="button" data-act="takeover">I\'ll play</button>';
+    if (state.auto) return '<button type="button" class="govuk-button govuk-button--secondary" data-act="takeover">I\'ll play</button>';
     if (hand.turnSeat !== "S") {
-      return '<button type="button" data-act="auto">Let them finish the hand</button>';
+      return '<button type="button" class="govuk-button govuk-button--secondary" data-act="auto">Let them finish the hand</button>';
     }
     if (hand.phase === "bid") return bidControls(hand);
     if (hand.phase === "trump") return trumpControls(hand);
     if (hand.phase === "double") {
-      return '<button type="button" class="primary" data-act="double">Double</button><button type="button" data-act="decline">Let it stand</button>';
+      return '<button type="button" class="govuk-button" data-act="double">Double</button><button type="button" class="govuk-button govuk-button--secondary" data-act="decline">Let it stand</button>';
     }
     if (hand.phase === "redouble") {
-      return '<button type="button" class="primary" data-act="redouble">Redouble</button><button type="button" data-act="decline">Let the double stand</button>';
+      return '<button type="button" class="govuk-button" data-act="redouble">Redouble</button><button type="button" class="govuk-button govuk-button--secondary" data-act="decline">Let the double stand</button>';
     }
-    if (hand.phase === "bury") return '<p class="hint">Click a trump in your hand. A low one is the usual choice.</p>';
+    if (hand.phase === "bury") return '<p class="govuk-body">Click a trump in your hand. A low one is the usual choice.</p>';
     if (hand.phase === "marriage") {
-      return '<button type="button" class="primary" data-act="marriage">Show the king and queen</button><button type="button" data-act="decline">Keep them</button>';
+      return '<button type="button" class="govuk-button" data-act="marriage">Show the king and queen</button><button type="button" class="govuk-button govuk-button--secondary" data-act="decline">Keep them</button>';
     }
     let html = "";
     if (TN.canAsk(hand, "S")) {
-      html += '<button type="button" class="primary" data-act="reveal">Ask for trump</button><p class="hint">Or play a card, and leave the suit hidden.</p>';
+      html += '<button type="button" class="govuk-button" data-act="reveal">Ask for trump</button><p class="govuk-body">Or play a card, and leave the suit hidden.</p>';
     } else {
-      html += '<p class="hint">Play a card. Dim cards would be refused.</p>';
+      html += '<p class="govuk-body">Play a card. Dim cards would be refused.</p>';
     }
-    html += '<button type="button" data-act="auto">Let them finish the hand</button>';
+    html += '<button type="button" class="govuk-button govuk-button--secondary" data-act="auto">Let them finish the hand</button>';
     return html;
   }
 
   function bidControls(hand) {
     const floor = Math.max(16, (hand.bid || 0) + 1);
-    let html = '<button type="button" data-act="pass">Pass</button>';
+    let html = '<button type="button" class="govuk-button govuk-button--secondary" data-act="pass">Pass</button>';
     if (floor > 28) return html;
     const top = state.moreBids ? 28 : Math.min(28, floor + 4);
     for (let n = floor; n <= top; n++) {
-      html += '<button type="button" data-act="bid" data-value="' + n + '"' + (n === floor ? ' class="primary"' : "") + ">" + n + "</button>";
+      const cls = n === floor ? "govuk-button" : "govuk-button govuk-button--secondary";
+      html += '<button type="button" class="' + cls + '" data-act="bid" data-value="' + n + '">' + n + "</button>";
     }
-    if (!state.moreBids && top < 28) html += '<button type="button" data-act="morebids">Higher</button>';
+    if (!state.moreBids && top < 28) html += '<button type="button" class="govuk-button govuk-button--secondary" data-act="morebids">Higher</button>';
     return html;
   }
 
@@ -267,7 +300,7 @@
       if (!held.has(suit)) return;
       const info = TN.SUIT_INFO[suit];
       html +=
-        '<button type="button" class="primary" data-act="trump" data-suit="' +
+        '<button type="button" class="govuk-button" data-act="trump" data-suit="' +
         suit +
         '">' +
         info.symbol +
@@ -275,7 +308,7 @@
         info.name +
         "</button>";
     });
-    html += '<button type="button" data-act="trump" data-suit="7th">Seventh card</button>';
+    html += '<button type="button" class="govuk-button govuk-button--secondary" data-act="trump" data-suit="7th">Seventh card</button>';
     return html;
   }
 
@@ -433,6 +466,7 @@
   document.body.addEventListener("click", (event) => {
     const node = event.target.closest("[data-act]");
     if (!node || node.dataset.act === "quiet") return;
+    if (node.tagName === "A") event.preventDefault();
     act(node.dataset.act, node);
   });
 
@@ -456,7 +490,7 @@
   function rulesHTML() {
     return (
       '<article class="rules">' +
-      "<h2>How this table plays 29</h2>" +
+      '<h1 class="govuk-heading-l">How this table plays 29</h1>' +
       "<p>Four players play in two pairs. Your partner sits across from you. The pack has 32 cards. The jack and the nine rank above the ace. Play moves to your right.</p>" +
       "<p>The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.</p>" +
       section(
@@ -515,12 +549,14 @@
           "<ul><li>A made contract shows 1 red pip.</li><li>A missed contract shows 1 black pip.</li><li>A double is worth 2 pips.</li><li>A redouble is worth 4 pips.</li></ul>" +
           "<p>Six red pips win the match. Six black pips lose the match.</p>"
       ) +
-      '<p class="colophon">The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.</p>' +
+      '<p class="govuk-body-s colophon">The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.</p>' +
       "</article>"
-    );
+    )
+      .replaceAll("<p>", '<p class="govuk-body">')
+      .replaceAll("<ul>", '<ul class="govuk-list govuk-list--bullet">');
   }
 
   function section(title, body) {
-    return "<section><h3>" + title + "</h3>" + body + "</section>";
+    return '<section><h2 class="govuk-heading-m">' + title + "</h2>" + body + "</section>";
   }
 })();

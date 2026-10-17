@@ -1,37 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#016500" />
-    <meta name="description" content="A PySol-style table that teaches the Bangladeshi card game 29." />
+    <meta name="theme-color" content="#f4f8fb" />
+    <meta name="description" content="A table that teaches the Bangladeshi card game 29." />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>Twenty-nine</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icons/icon-192.png" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/govuk-frontend.min.css" />
     <link rel="stylesheet" href="css/table.css" />
   </head>
-  <body>
-    <div class="desk">
-      <header class="mast">
-        <p class="wordmark">Twenty-nine</p>
-        <nav id="nav">
-          <button type="button" data-act="nav" data-mode="learn">Learn</button>
-          <button type="button" data-act="nav" data-mode="play">Play</button>
-          <button type="button" data-act="nav" data-mode="rules">Rules</button>
-        </nav>
-        <p class="legend" title="How many points a card scores when your side wins the trick">
-          <span>Card points</span>
-          J 3 · 9 2 · A 1 · 10 1 · rest 0
-        </p>
-        <button type="button" id="install" data-act="install" hidden>Install</button>
-      </header>
-      <div class="layout">
-        <div id="felt" class="felt"></div>
-        <aside id="pad" class="pad"></aside>
+  <body class="govuk-template__body">
+    <script>
+      document.body.className += " js-enabled" + ("noModule" in HTMLScriptElement.prototype ? " govuk-frontend-supported" : "");
+    </script>
+    <a href="#main" class="govuk-skip-link">Skip to main content</a>
+    <section class="govuk-service-navigation" aria-label="Service information">
+      <div class="govuk-width-container govuk-service-navigation__inlining-container">
+        <div class="govuk-service-navigation__container">
+          <span class="govuk-service-navigation__service-name">
+            <span class="govuk-service-navigation__text">Twenty-nine</span>
+          </span>
+          <nav aria-label="Menu" class="govuk-service-navigation__wrapper" id="nav">
+            <ul class="govuk-service-navigation__list" id="navigation">
+              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+                <a class="govuk-service-navigation__link" href="#learn" data-act="nav" data-mode="learn" data-label="Learn" aria-current="page">
+                  <strong class="govuk-service-navigation__active-fallback">Learn</strong>
+                </a>
+              </li>
+              <li class="govuk-service-navigation__item">
+                <a class="govuk-service-navigation__link" href="#play" data-act="nav" data-mode="play" data-label="Play">Play</a>
+              </li>
+              <li class="govuk-service-navigation__item">
+                <a class="govuk-service-navigation__link" href="#rules" data-act="nav" data-mode="rules" data-label="Rules">Rules</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mast-end">
+          <p class="govuk-body-s legend">Jack 3, nine 2, ace 1, ten 1, other cards 0</p>
+          <a id="install" class="govuk-link" href="#install" data-act="install" hidden>Install</a>
+        </div>
       </div>
+    </section>
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper" id="main">
+        <div class="layout">
+          <div id="felt" class="felt"></div>
+          <aside id="pad" class="pad" aria-label="Guidance"></aside>
+        </div>
+      </main>
     </div>
     <script src="js/engine.js"></script>
     <script src="js/bots.js"></script>
