@@ -37,7 +37,7 @@ test("the Bengali copy file is the text the app shows", () => {
   I18n.setLang("bn");
   assert.equal(I18n.t("app.name", "29 শিখ শালা!"), "29 শিখ শালা!");
   assert.equal(I18n.t("tag.bid", "bid {n}", { n: 16 }), "বিড ১৬");
-  assert.equal(I18n.t("lesson.kicker", "Lesson {n} of {total}", { n: 1, total: 8 }), "লেসন ১ / ৮");
+  assert.equal(I18n.t("lesson.kicker", "Lesson {n} of {total}", { n: 1, total: 8 }), "প্রশ্ন ১ / ৮");
   I18n.setLang("en");
   assert.equal(I18n.t("tag.bid", "bid 16", { n: 16 }), "bid 16");
 });

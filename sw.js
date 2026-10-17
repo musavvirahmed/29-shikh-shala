@@ -1,17 +1,20 @@
-const CACHE = "twenty-nine-19";
+const CACHE = "twenty-nine-govuk-16";
 const FILES = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./css/govuk-frontend.min.css",
   "./css/table.css",
   "./copy/bengali.md",
+  "./assets/logo.svg",
+  "./assets/fonts/source-sans-3-latin-400-normal.woff2",
+  "./assets/fonts/source-sans-3-latin-700-normal.woff2",
   "./js/i18n.js",
   "./js/engine.js",
   "./js/bots.js",
   "./js/lessons.js",
   "./js/ui.js",
   "./js/main.js",
-  "./assets/logo.svg",
   "./assets/tiles/Felt_Green.png",
   "./icons/favicon.svg",
   "./icons/favicon-32.png",

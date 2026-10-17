@@ -32,10 +32,21 @@
     })[ch]);
   }
 
+  function cardImages(file) {
+    return (
+      '<img class="card-shadow" alt="" aria-hidden="true" src="' +
+      file +
+      '">' +
+      '<img class="card-face" alt="" src="' +
+      file +
+      '">'
+    );
+  }
+
   function cardHTML(card, opts) {
     opts = opts || {};
     if (!card || !card.face) {
-      return '<div class="card back" aria-hidden="true"><img alt="" src="assets/cards/back111.gif"></div>';
+      return '<div class="card back" aria-hidden="true">' + cardImages("assets/cards/back111.gif") + "</div>";
     }
     const suit = SUITS[card.suit];
     const classes = ["card"];
@@ -54,9 +65,7 @@
       '" aria-label="' +
       esc(label) +
       '">' +
-      '<img alt="" src="' +
-      file +
-      '">' +
+      cardImages(file) +
       "</button>"
     );
   }

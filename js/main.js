@@ -9,6 +9,8 @@
     lesson: 0,
     step: 0,
     picked: null,
+    selected: null,
+    missing: false,
     match: null,
     auto: false,
     quiet: false,
@@ -21,6 +23,7 @@
   const felt = document.querySelector("#felt");
   const pad = document.querySelector("#pad");
   const nav = document.querySelector("#nav");
+  let feltScene = "";
 
   function tx(key, fallback, vars) {
     return window.UnotrishI18n.t(key, fallback, vars);
@@ -29,25 +32,53 @@
   function paintChrome() {
     const name = tx("app.name", "29 শিখ শালা!");
     document.title = name;
-    const mark = document.querySelector(".wordmark img");
+    const mark = document.querySelector(".govuk-generic-header__homepage-link img");
     if (mark) mark.alt = name;
+    const skip = document.querySelector(".govuk-skip-link");
+    if (skip) skip.textContent = tx("chrome.skip", "Skip to main content");
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", tx("app.description", "A table that teaches the card game 29."));
-    nav.querySelector('[data-mode="learn"]').textContent = tx("nav.learn", "Learn");
-    nav.querySelector('[data-mode="play"]').textContent = tx("nav.play", "Play");
-    nav.querySelector('[data-mode="rules"]').textContent = tx("nav.rules", "Rules");
+    if (meta) meta.setAttribute("content", tx("app.description", "A table that teaches the Bangladeshi card game 29."));
+    nav.querySelectorAll("[data-mode]").forEach((link) => {
+      const key = "nav." + link.dataset.mode;
+      const fallback = { learn: "Learn", play: "Play", rules: "Rules" }[link.dataset.mode];
+      link.dataset.label = tx(key, fallback);
+    });
     document.querySelector("#install").textContent = tx("action.install", "Install");
-    const legend = document.querySelector(".legend span");
-    if (legend) legend.textContent = tx("legend.points", "Card points");
-    const ip = document.querySelector("#ip-country");
-    if (ip) {
-      const code = window.UnotrishI18n.country();
-      ip.textContent = code || "";
-      ip.hidden = !code;
-    }
-    document.querySelectorAll("[data-lang]").forEach((button) => {
-      if (button.dataset.lang === window.UnotrishI18n.getLang()) button.setAttribute("aria-current", "true");
-      else button.removeAttribute("aria-current");
+    const menu = document.querySelector(".govuk-service-navigation__toggle");
+    if (menu) menu.textContent = tx("chrome.menu", "Menu");
+    const legend = document.querySelector(".govuk-generic-header .legend");
+    if (legend) legend.textContent = tx("legend.line", "Jack 3, nine 2, ace 1, ten 1, others 0");
+    paintLangNav();
+  }
+
+  function paintLangNav() {
+    const current = window.UnotrishI18n.getLang();
+    document.querySelectorAll(".govuk-language-navigation__list-item").forEach((item) => {
+      const el = item.querySelector("[data-lang]");
+      if (!el) return;
+      const lang = el.dataset.lang;
+      const label = el.textContent;
+      const on = lang === current;
+      if (on && el.tagName === "A") {
+        const span = document.createElement("span");
+        span.className = "govuk-language-navigation__text";
+        span.setAttribute("aria-current", "true");
+        span.setAttribute("lang", lang);
+        span.dataset.lang = lang;
+        span.textContent = label;
+        el.replaceWith(span);
+      } else if (!on && el.tagName === "SPAN") {
+        const a = document.createElement("a");
+        a.className = "govuk-language-navigation__link";
+        a.href = "?lang=" + lang;
+        a.rel = "alternate";
+        a.lang = lang;
+        a.hreflang = lang;
+        a.dataset.act = "lang";
+        a.dataset.lang = lang;
+        a.textContent = label;
+        el.replaceWith(a);
+      }
     });
   }
 
@@ -56,14 +87,30 @@
     document.querySelector(".layout").classList.toggle("rules-mode", state.mode === "rules");
     paintNav();
     if (state.mode === "learn") renderLesson();
-    else if (state.mode === "rules") renderRules();
-    else renderPlay();
+    else {
+      feltScene = "";
+      if (state.mode === "rules") renderRules();
+      else renderPlay();
+    }
+  }
+
+  function paintLessonFelt(view) {
+    const scene = state.lesson + ":" + state.step;
+    if (feltScene === scene) return;
+    felt.innerHTML = UI.feltHTML(view);
+    felt.classList.remove("paper");
+    feltScene = scene;
   }
 
   function paintNav() {
-    nav.querySelectorAll("[data-mode]").forEach((button) => {
-      if (button.dataset.mode === state.mode) button.setAttribute("aria-current", "page");
-      else button.removeAttribute("aria-current");
+    nav.querySelectorAll("[data-mode]").forEach((link) => {
+      const on = link.dataset.mode === state.mode;
+      const item = link.closest("li");
+      if (item) item.classList.toggle("govuk-service-navigation__item--active", on);
+      if (on) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+      const label = link.dataset.label || link.textContent;
+      link.innerHTML = on ? '<strong class="govuk-service-navigation__active-fallback">' + label + "</strong>" : label;
     });
     const install = document.querySelector("#install");
     install.hidden = !state.install;
@@ -75,53 +122,95 @@
     const view = step.view;
     const lessonKey = "lesson." + lesson.id + "." + state.step;
     view.ribbon = tx(lessonKey + ".ribbon", step.ribbon || view.ribbon);
-    felt.innerHTML = UI.feltHTML(view);
-    felt.classList.remove("paper");
-    const choices = step.choices
+    paintLessonFelt(view);
+    const revealed = state.picked && state.picked.index === state.selected;
+    const answeredRight = revealed && state.picked.correct;
+    const answeredWrong = revealed && !state.picked.correct;
+    const radios = step.choices
       .map((choice, index) => {
-        let mark = "";
-        if (state.picked) mark = choice.correct ? " right" : state.picked.index === index ? " wrong" : "";
+        const id = "answer-" + state.lesson + "-" + state.step + "-" + index;
+        const checked = state.selected === index ? " checked" : "";
         return (
-          '<button type="button" class="choice' +
-          mark +
+          '<div class="govuk-radios__item">' +
+          '<input class="govuk-radios__input" id="' +
+          id +
+          '" name="lesson-answer" type="radio" value="' +
+          index +
           '" data-act="choose" data-index="' +
           index +
+          '"' +
+          checked +
+          ">" +
+          '<label class="govuk-label govuk-radios__label" for="' +
+          id +
           '">' +
           UI.esc(tx(lessonKey + ".c" + index, choice.label)) +
-          "</button>"
+          "</label></div>"
         );
       })
       .join("");
-    const why = state.picked
-      ? '<p class="why">' + UI.esc(tx(lessonKey + ".w" + state.picked.index, step.choices[state.picked.index].why)) + "</p>"
+    const why = revealed ? UI.esc(tx(lessonKey + ".w" + state.picked.index, step.choices[state.picked.index].why)) : "";
+    const select = tx("lesson.select", "Select an answer");
+    // Missing selection uses the error summary; a wrong pick uses the inline error.
+    const error = state.missing
+      ? '<p id="answer-error" class="govuk-error-message"><span class="govuk-visually-hidden">' + UI.esc(tx("lesson.error", "Error")) + ": </span>" + UI.esc(select) + "</p>"
+      : answeredWrong
+        ? '<p id="answer-error" class="govuk-error-message"><span class="govuk-visually-hidden">' + UI.esc(tx("lesson.error", "Error")) + ": </span>" + why + "</p>"
+        : "";
+    const summary = state.missing
+      ? '<div class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1">' +
+        '<h2 class="govuk-error-summary__title" id="error-summary-title">' +
+        UI.esc(tx("lesson.problem", "There is a problem")) +
+        "</h2>" +
+        '<div class="govuk-error-summary__body"><ul class="govuk-list govuk-error-summary__list">' +
+        '<li><a href="#lesson-answer">' +
+        UI.esc(select) +
+        "</a></li></ul></div></div>"
       : "";
+    const inset = answeredRight ? '<div class="govuk-inset-text" id="answer-why">' + why + "</div>" : "";
     const last = state.step === lesson.steps.length - 1 && state.lesson === Lessons.lessons.length - 1;
-    const nextLabel = last ? tx("lesson.deal", "Deal a hand") : tx("lesson.next", "Next");
-    const nextAct = last ? "deal" : "next-step";
+    const buttonLabel = answeredRight
+      ? last
+        ? tx("lesson.deal", "Deal a hand")
+        : tx("lesson.next", "Next")
+      : tx("lesson.continue", "Check");
+    const ask = step.ask ? tx(lessonKey + ".ask", step.ask) : "";
+    const heading = ask || tx("lesson." + lesson.id + ".title", lesson.title);
+    const back =
+      state.step > 0 || state.lesson > 0
+        ? '<a class="govuk-back-link" href="#back" data-act="prev-step">' + UI.esc(tx("lesson.back", "Back")) + "</a>"
+        : "";
+    const describedBy =
+      "answer-hint" + (error ? " answer-error" : "") + (inset ? " answer-why" : "");
     pad.innerHTML =
-      '<p class="kicker">' +
+      back +
+      summary +
+      '<div class="govuk-form-group' +
+      (state.missing || answeredWrong ? " govuk-form-group--error" : "") +
+      '">' +
+      '<fieldset class="govuk-fieldset" id="lesson-answer" aria-describedby="' +
+      describedBy +
+      '">' +
+      '<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">' +
+      '<span class="govuk-caption-l">' +
       UI.esc(tx("lesson.kicker", "Lesson " + (state.lesson + 1) + " of " + Lessons.lessons.length, { n: state.lesson + 1, total: Lessons.lessons.length })) +
-      "</p>" +
-      "<h2>" +
-      UI.esc(tx("lesson." + lesson.id + ".title", lesson.title)) +
-      "</h2>" +
-      '<ol class="lesson-dots">' +
-      Lessons.lessons.map((_, index) => {
-        const cls = index === state.lesson ? "on" : index < state.lesson ? "done" : "";
-        return '<li><button type="button" data-act="goto-lesson" data-lesson="' + index + '" class="' + cls + '" aria-label="' + UI.esc(tx("lesson.goto", "Lesson " + (index + 1), { n: index + 1 })) + '"></button></li>';
-      }).join("") +
-      "</ol>" +
-      '<p class="coach">' +
+      "</span>" +
+      '<h1 class="govuk-fieldset__heading">' +
+      UI.esc(heading) +
+      "</h1></legend>" +
+      '<div id="answer-hint" class="govuk-hint">' +
       UI.esc(tx(lessonKey + ".coach", step.coach)) +
-      "</p>" +
-      '<div class="choices">' +
-      choices +
       "</div>" +
-      why +
-      '<div class="row">' +
-      (state.step > 0 || state.lesson > 0 ? '<button type="button" data-act="prev-step">' + UI.esc(tx("lesson.back", "Back")) + "</button>" : "") +
-      (state.picked ? '<button type="button" class="primary" data-act="' + nextAct + '">' + nextLabel + "</button>" : "") +
-      "</div>";
+      error +
+      '<div class="govuk-radios" data-module="govuk-radios">' +
+      radios +
+      "</div></fieldset></div>" +
+      inset +
+      '<button type="button" class="govuk-button" data-act="check">' +
+      UI.esc(buttonLabel) +
+      "</button>";
+    const problem = pad.querySelector(".govuk-error-summary");
+    if (problem) problem.focus();
   }
 
   function renderRules() {
@@ -137,15 +226,15 @@
       empty.ribbon = tx("ribbon.empty", "Thirty-two cards. Twenty-eight card points.");
       felt.innerHTML = UI.feltHTML(empty);
       pad.innerHTML =
-        '<p class="kicker">' +
+        '<p class="govuk-caption-m">' +
         UI.esc(tx("play.kicker", "A hand")) +
-        "</p><h2>" +
+        '</p><h1 class="govuk-heading-l">' +
         UI.esc(tx("play.sit", "Sit down")) +
-        '</h2><p class="coach">' +
+        '</h1><p class="govuk-body">' +
         UI.esc(tx("play.sitCoach", "You sit at the bottom. Partner sits across. Left deals the first hand, so you bid first. Four cards, then a promise, then four more.")) +
-        '</p><div class="row"><button type="button" class="primary" data-act="deal">' +
+        '</p><button type="button" class="govuk-button" data-act="deal">' +
         UI.esc(tx("play.deal", "Deal")) +
-        "</button></div>";
+        "</button>";
       return;
     }
     const match = state.match;
@@ -161,29 +250,36 @@
     const coachFull = tx(spec.key, spec.en, spec.vars);
     const coach = state.quiet ? firstSentence(coachFull) : coachFull;
     const flashText = state.flash ? tx(state.flashKey, state.flash, state.flashVars) : "";
-    const flash = flashText ? '<p class="flash">' + UI.esc(flashText) + "</p>" : "";
+    const flash = flashText
+      ? '<p class="govuk-error-message"><span class="govuk-visually-hidden">' + UI.esc(tx("lesson.error", "Error")) + ": </span>" + UI.esc(flashText) + "</p>"
+      : "";
     const notes = hand.notes && hand.notes.length ? hand.notes : hand.log.map((line) => ({ key: "", en: line, vars: {} }));
     const log = notes
       .slice(-6)
       .map((note) => "<li>" + UI.esc(tx(note.key, note.en, note.vars)) + "</li>")
       .join("");
     pad.innerHTML =
-      '<p class="kicker">' +
+      '<p class="govuk-caption-m">' +
       UI.esc(kicker(hand)) +
-      "</p><h2>" +
+      '</p><h1 class="govuk-heading-l">' +
       UI.esc(title(hand)) +
-      "</h2>" +
+      "</h1>" +
       flash +
-      '<p class="coach">' +
+      '<p class="govuk-body">' +
       UI.esc(coach) +
       "</p>" +
       '<div class="choices">' +
       controls(hand) +
       "</div>" +
-      '<label class="quiet"><input type="checkbox" data-act="quiet"' +
+      '<div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">' +
+      '<div class="govuk-checkboxes__item">' +
+      '<input class="govuk-checkboxes__input" id="quiet" type="checkbox" data-act="quiet"' +
       (state.quiet ? " checked" : "") +
-      "> " + UI.esc(tx("play.quiet", "Short notes")) + "</label>" +
-      (log ? '<ol class="log">' + log + "</ol>" : "");
+      ">" +
+      '<label class="govuk-label govuk-checkboxes__label" for="quiet">' +
+      UI.esc(tx("play.quiet", "Short notes")) +
+      "</label></div></div>" +
+      (log ? '<h2 class="govuk-heading-s">' + UI.esc(tx("play.log", "This hand")) + '</h2><ul class="govuk-list govuk-list--bullet log">' + log + "</ul>" : "");
     scheduleBots();
   }
 
@@ -283,41 +379,41 @@
 
   function controls(hand) {
     if (hand.phase === "annulled" || hand.phase === "handEnd") {
-      return '<button type="button" class="primary" data-act="continue">' + UI.esc(tx("play.continue", "Deal the next hand")) + "</button>";
+      return '<button type="button" class="govuk-button" data-act="continue">' + UI.esc(tx("play.continue", "Deal the next hand")) + "</button>";
     }
     if (hand.phase === "matchEnd") {
-      return '<button type="button" class="primary" data-act="newmatch">' + UI.esc(tx("play.newMatch", "New match")) + "</button>";
+      return '<button type="button" class="govuk-button" data-act="newmatch">' + UI.esc(tx("play.newMatch", "New match")) + "</button>";
     }
-    if (state.auto) return '<button type="button" data-act="takeover">' + UI.esc(tx("play.takeover", "I will play")) + "</button>";
+    if (state.auto) return '<button type="button" class="govuk-button govuk-button--secondary" data-act="takeover">' + UI.esc(tx("play.takeover", "I will play")) + "</button>";
     if (hand.turnSeat !== "S") {
-      return '<button type="button" data-act="auto">' + UI.esc(tx("play.auto", "Let them finish the hand")) + "</button>";
+      return '<button type="button" class="govuk-button govuk-button--secondary" data-act="auto">' + UI.esc(tx("play.auto", "Let them finish the hand")) + "</button>";
     }
     if (hand.phase === "bid") return bidControls(hand);
     if (hand.phase === "trump") return trumpControls(hand);
     if (hand.phase === "double") {
       return (
-        '<button type="button" class="primary" data-act="double">' +
+        '<button type="button" class="govuk-button" data-act="double">' +
         UI.esc(tx("play.double", "Double")) +
-        '</button><button type="button" data-act="decline">' +
+        '</button><button type="button" class="govuk-button govuk-button--secondary" data-act="decline">' +
         UI.esc(tx("play.letStand", "Do not double")) +
         "</button>"
       );
     }
     if (hand.phase === "redouble") {
       return (
-        '<button type="button" class="primary" data-act="redouble">' +
+        '<button type="button" class="govuk-button" data-act="redouble">' +
         UI.esc(tx("play.redouble", "Redouble")) +
-        '</button><button type="button" data-act="decline">' +
+        '</button><button type="button" class="govuk-button govuk-button--secondary" data-act="decline">' +
         UI.esc(tx("play.letDouble", "Do not redouble")) +
         "</button>"
       );
     }
-    if (hand.phase === "bury") return '<p class="hint">' + UI.esc(tx("play.buryHint", "Click a trump in your hand. A low trump is the usual choice.")) + "</p>";
+    if (hand.phase === "bury") return '<p class="govuk-body">' + UI.esc(tx("play.buryHint", "Click a trump in your hand. A low trump is the usual choice.")) + "</p>";
     if (hand.phase === "marriage") {
       return (
-        '<button type="button" class="primary" data-act="marriage">' +
+        '<button type="button" class="govuk-button" data-act="marriage">' +
         UI.esc(tx("play.showMarriage", "Show the king and queen")) +
-        '</button><button type="button" data-act="decline">' +
+        '</button><button type="button" class="govuk-button govuk-button--secondary" data-act="decline">' +
         UI.esc(tx("play.keepMarriage", "Keep them")) +
         "</button>"
       );
@@ -325,27 +421,28 @@
     let html = "";
     if (TN.canAsk(hand, "S")) {
       html +=
-        '<button type="button" class="primary" data-act="reveal">' +
+        '<button type="button" class="govuk-button" data-act="reveal">' +
         UI.esc(tx("play.ask", "Ask for trump")) +
-        '</button><p class="hint">' +
+        '</button><p class="govuk-body">' +
         UI.esc(tx("play.askHint", "Or play a card, and leave the suit hidden.")) +
         "</p>";
     } else {
-      html += '<p class="hint">' + UI.esc(tx("play.playHint", "Play a card. A pale card is not a legal play.")) + "</p>";
+      html += '<p class="govuk-body">' + UI.esc(tx("play.playHint", "Play a card. A pale card is not a legal play.")) + "</p>";
     }
-    html += '<button type="button" data-act="auto">' + UI.esc(tx("play.auto", "Let them finish the hand")) + "</button>";
+    html += '<button type="button" class="govuk-button govuk-button--secondary" data-act="auto">' + UI.esc(tx("play.auto", "Let them finish the hand")) + "</button>";
     return html;
   }
 
   function bidControls(hand) {
     const floor = Math.max(16, (hand.bid || 0) + 1);
-    let html = '<button type="button" data-act="pass">' + UI.esc(tx("play.pass", "Pass")) + "</button>";
+    let html = '<button type="button" class="govuk-button govuk-button--secondary" data-act="pass">' + UI.esc(tx("play.pass", "Pass")) + "</button>";
     if (floor > 28) return html;
     const top = state.moreBids ? 28 : Math.min(28, floor + 4);
     for (let n = floor; n <= top; n++) {
-      html += '<button type="button" data-act="bid" data-value="' + n + '"' + (n === floor ? ' class="primary"' : "") + ">" + window.UnotrishI18n.digits(n) + "</button>";
+      const cls = n === floor ? "govuk-button" : "govuk-button govuk-button--secondary";
+      html += '<button type="button" class="' + cls + '" data-act="bid" data-value="' + n + '">' + window.UnotrishI18n.digits(n) + "</button>";
     }
-    if (!state.moreBids && top < 28) html += '<button type="button" data-act="morebids">' + UI.esc(tx("play.higher", "Higher")) + "</button>";
+    if (!state.moreBids && top < 28) html += '<button type="button" class="govuk-button govuk-button--secondary" data-act="morebids">' + UI.esc(tx("play.higher", "Higher")) + "</button>";
     return html;
   }
 
@@ -356,7 +453,7 @@
       if (!held.has(suit)) return;
       const info = TN.SUIT_INFO[suit];
       html +=
-        '<button type="button" class="primary" data-act="trump" data-suit="' +
+        '<button type="button" class="govuk-button" data-act="trump" data-suit="' +
         suit +
         '">' +
         info.symbol +
@@ -364,7 +461,7 @@
         tx("suit." + suit, info.name) +
         "</button>";
     });
-    html += '<button type="button" data-act="trump" data-suit="7th">' + UI.esc(tx("play.seventh", "Seventh card")) + "</button>";
+    html += '<button type="button" class="govuk-button govuk-button--secondary" data-act="trump" data-suit="7th">' + UI.esc(tx("play.seventh", "Seventh card")) + "</button>";
     return html;
   }
 
@@ -409,6 +506,7 @@
   function act(name, node) {
     if (name === "lang") {
       window.UnotrishI18n.choose(node.dataset.lang);
+      feltScene = "";
       render();
       return;
     }
@@ -431,14 +529,47 @@
       state.lesson = Number(node.dataset.lesson);
       state.step = 0;
       state.picked = null;
+      state.selected = null;
+      state.missing = false;
       render();
       return;
     }
     if (name === "choose") {
-      const lesson = Lessons.lessons[state.lesson];
       const index = Number(node.dataset.index);
-      state.picked = { index, correct: lesson.steps[state.step].choices[index].correct };
-      render();
+      const needsPad = state.missing || (state.picked && state.picked.index !== index);
+      state.selected = index;
+      state.missing = false;
+      if (state.picked && state.picked.index !== state.selected) state.picked = null;
+      // Browser already checked the radio; only rebuild the pad when feedback must clear.
+      if (needsPad) render();
+      return;
+    }
+    if (name === "check") {
+      const lesson = Lessons.lessons[state.lesson];
+      const step = lesson.steps[state.step];
+      if (state.selected == null) {
+        state.missing = true;
+        state.picked = null;
+        render();
+        return;
+      }
+      state.missing = false;
+      if (!state.picked || state.picked.index !== state.selected) {
+        const choice = step.choices[state.selected];
+        state.picked = { index: state.selected, correct: choice.correct };
+        render();
+        return;
+      }
+      if (!state.picked.correct) {
+        render();
+        return;
+      }
+      const last = state.step === lesson.steps.length - 1 && state.lesson === Lessons.lessons.length - 1;
+      if (last) {
+        act("deal", node);
+        return;
+      }
+      advance();
       return;
     }
     if (name === "next-step") {
@@ -522,6 +653,8 @@
   function advance() {
     const lesson = Lessons.lessons[state.lesson];
     state.picked = null;
+    state.selected = null;
+    state.missing = false;
     if (state.step < lesson.steps.length - 1) state.step += 1;
     else if (state.lesson < Lessons.lessons.length - 1) {
       state.lesson += 1;
@@ -532,6 +665,8 @@
 
   function retreat() {
     state.picked = null;
+    state.selected = null;
+    state.missing = false;
     if (state.step > 0) state.step -= 1;
     else if (state.lesson > 0) {
       state.lesson -= 1;
@@ -542,13 +677,16 @@
 
   document.body.addEventListener("click", (event) => {
     const node = event.target.closest("[data-act]");
-    if (!node || node.dataset.act === "quiet") return;
+    if (!node || node.dataset.act === "quiet" || node.dataset.act === "choose") return;
+    if (node.tagName === "A") event.preventDefault();
     act(node.dataset.act, node);
   });
 
   document.body.addEventListener("change", (event) => {
     const node = event.target.closest("[data-act]");
-    if (node && node.dataset.act === "quiet") act("quiet", node);
+    if (!node) return;
+    if (node.dataset.act === "quiet") act("quiet", node);
+    else if (node.dataset.act === "choose") act("choose", node);
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -561,6 +699,45 @@
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
 
+  function initServiceNavigation() {
+    const root = document.querySelector('[data-module="govuk-service-navigation"]');
+    const button = root && root.querySelector(".govuk-js-service-navigation-toggle");
+    if (!button) return;
+    const menuId = button.getAttribute("aria-controls");
+    const menu = menuId && document.getElementById(menuId);
+    if (!menu) return;
+
+    let open = false;
+    const rootStyles = getComputedStyle(document.documentElement);
+    const tablet = rootStyles.getPropertyValue("--govuk-breakpoint-tablet").trim() || "40.0625rem";
+    const mql = window.matchMedia("(min-width: " + tablet + ")");
+
+    function sync() {
+      if (mql.matches) {
+        menu.removeAttribute("hidden");
+        button.setAttribute("hidden", "");
+        button.setAttribute("aria-hidden", "true");
+        button.removeAttribute("aria-expanded");
+        return;
+      }
+      button.removeAttribute("hidden");
+      button.removeAttribute("aria-hidden");
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) menu.removeAttribute("hidden");
+      else menu.setAttribute("hidden", "");
+    }
+
+    button.addEventListener("click", () => {
+      open = !open;
+      sync();
+    });
+    if (mql.addEventListener) mql.addEventListener("change", sync);
+    else mql.addListener(sync);
+    sync();
+  }
+
+  initServiceNavigation();
+
   window.UnotrishI18n.loadCopy("copy/bengali.md")
     .catch(() => {})
     .then(() => {
@@ -570,7 +747,7 @@
     .then(() => render());
 
   function P(key, en) {
-    return "<p>" + UI.esc(tx(key, en)) + "</p>";
+    return '<p class="govuk-body">' + UI.esc(tx(key, en)) + "</p>";
   }
 
   function Li(key, en) {
@@ -580,18 +757,18 @@
   function rulesHTML() {
     return (
       '<article class="rules">' +
-      "<h2>" + UI.esc(tx("rules.title", "How this table plays 29")) + "</h2>" +
+      '<h1 class="govuk-heading-l">' + UI.esc(tx("rules.title", "How this table plays 29")) + "</h1>" +
       P("rules.lead", "Four players play in two pairs. Your partner sits across from you. The pack has 32 cards. The jack and the nine rank above the ace. Play moves to your right.") +
       P("rules.note", "The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.") +
       section("rules.pack.h", "The pack",
         P("rules.pack.1", "The rank, from high to low, is jack, nine, ace, ten, king, queen, eight, seven.") +
-        "<ul>" + Li("rules.pack.j", "Jack: 3 points") + Li("rules.pack.9", "Nine: 2 points") + Li("rules.pack.a", "Ace: 1 point") + Li("rules.pack.10", "Ten: 1 point") + Li("rules.pack.0", "King, queen, eight, and seven: 0 points") + "</ul>" +
+        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.pack.j", "Jack: 3 points") + Li("rules.pack.9", "Nine: 2 points") + Li("rules.pack.a", "Ace: 1 point") + Li("rules.pack.10", "Ten: 1 point") + Li("rules.pack.0", "King, queen, eight, and seven: 0 points") + "</ul>" +
         P("rules.pack.2", "Four suits give 28 points. The last trick adds no point. The name of the game is still 29.")
       ) +
       section("rules.deal.h", "The deal",
         P("rules.deal.1", "Left deals the first hand. The next dealer is the player on the right. Each player receives four cards.") +
         P("rules.deal.2", "Stop the deal if either of these hands has no points:") +
-        "<ul>" + Li("rules.deal.3", "The player to the right of the dealer") + Li("rules.deal.4", "The partner of the dealer") + "</ul>" +
+        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.deal.3", "The player to the right of the dealer") + Li("rules.deal.4", "The partner of the dealer") + "</ul>" +
         P("rules.deal.5", "The other two players may hold no points. The deal still continues.")
       ) +
       section("rules.auction.h", "The auction",
@@ -606,7 +783,7 @@
         P("rules.trump.3", "If the bidder names a suit, each player receives four more cards. The bidder then puts one trump face down. That card stays out of the hand until a player asks.") +
         P("rules.trump.4", "Before a player asks, trump has no power. The bidder cannot lead trump. A trump on another suit is only a card of its own suit.") +
         P("rules.trump.5", "Stop a seventh-card deal in either case:") +
-        "<ul>" + Li("rules.trump.6", "The bidder has no other trump that scores points.") + Li("rules.trump.7", "The other side has no trump, or only the seven.") + "</ul>"
+        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.trump.6", "The bidder has no other trump that scores points.") + Li("rules.trump.7", "The other side has no trump, or only the seven.") + "</ul>"
       ) +
       section("rules.double.h", "Double",
         P("rules.double.1", "An opponent may double after the bidder chooses trump, and before the next four cards. A double makes the hand worth 2 pips. The bidding side may then redouble. A redouble makes the hand worth 4 pips. Both sides decide from the first four cards only. With no double, the hand is worth 1 pip.")
@@ -614,7 +791,7 @@
       section("rules.ask.h", "Asking",
         P("rules.ask.1", "Follow the led suit if you have a card of that suit.") +
         P("rules.ask.2", "If you have no card of the led suit, choose one:") +
-        "<ul>" + Li("rules.ask.3", "Discard a card from another suit.") + Li("rules.ask.4", "Ask for trump.") + "</ul>" +
+        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.ask.3", "Discard a card from another suit.") + Li("rules.ask.4", "Ask for trump.") + "</ul>" +
         P("rules.ask.5", "If you ask, the bidder shows the face-down card. That suit is trump for this trick and for the rest of the hand. You must play a trump if you have one. A card of that suit already in the trick can win.") +
         P("rules.ask.6", "At some tables, the first player who cannot follow must ask. That player may then discard. At this table, you choose whether to ask.") +
         P("rules.ask.7", "After trump is known, follow the led suit if you can. If you cannot follow, you may play a trump or a discard. If you play a trump and can beat the trump in the trick, you must beat it.") +
@@ -622,13 +799,13 @@
       ) +
       section("rules.marriage.h", "Marriage",
         P("rules.marriage.1", "A marriage is the king and queen of trump in one hand. Only the bidding side may show it, after trump is face up.") +
-        "<ul>" + Li("rules.marriage.16", "Bid 16, 17, or 18: the target does not change.") + Li("rules.marriage.19", "Bid 19 or 20: the target becomes 16.") + Li("rules.marriage.21", "Bid 21: the target becomes 17.") + Li("rules.marriage.22", "Bid 22 or higher: subtract 4. The target does not go below 16.") + "</ul>" +
+        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.marriage.16", "Bid 16, 17, or 18: the target does not change.") + Li("rules.marriage.19", "Bid 19 or 20: the target becomes 16.") + Li("rules.marriage.21", "Bid 21: the target becomes 17.") + Li("rules.marriage.22", "Bid 22 or higher: subtract 4. The target does not go below 16.") + "</ul>" +
         P("rules.marriage.2", "The Bangladesh note gives the rule for 19, 20, and 21. It does not give a rule for 22 or higher. The rule for 22 or higher is the rule of this table.") +
         P("rules.marriage.3", "The king and queen of the other side do not change the target.")
       ) +
       section("rules.pips.h", "Pips",
         P("rules.pips.1", "A pip is one point on the match score. Only the score of the bidding side changes.") +
-        "<ul>" + Li("rules.pips.red", "A made contract shows 1 red pip.") + Li("rules.pips.black", "A missed contract shows 1 black pip.") + Li("rules.pips.double", "A double is worth 2 pips.") + Li("rules.pips.redouble", "A redouble is worth 4 pips.") + "</ul>" +
+        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.pips.red", "A made contract shows 1 red pip.") + Li("rules.pips.black", "A missed contract shows 1 black pip.") + Li("rules.pips.double", "A double is worth 2 pips.") + Li("rules.pips.redouble", "A redouble is worth 4 pips.") + "</ul>" +
         P("rules.pips.2", "Six red pips win the match. Six black pips lose the match.")
       ) +
       '<p class="colophon">' + UI.esc(tx("rules.colophon", "The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.")) + "</p>" +
@@ -637,6 +814,6 @@
   }
 
   function section(titleKey, title, body) {
-    return "<section><h3>" + UI.esc(tx(titleKey, title)) + "</h3>" + body + "</section>";
+    return '<section><h2 class="govuk-heading-m">' + UI.esc(tx(titleKey, title)) + "</h2>" + body + "</section>";
   }
 })();

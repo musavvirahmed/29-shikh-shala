@@ -1,45 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#016500" />
-    <meta name="description" content="A table that teaches the card game 29." />
+    <meta name="theme-color" content="#0f7a52" />
+    <meta name="description" content="A table that teaches the Bangladeshi card game 29." />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>29 শিখ শালা!</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icons/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/govuk-frontend.min.css" />
     <link rel="stylesheet" href="css/table.css" />
   </head>
-  <body>
-    <div class="desk">
-      <header class="mast">
-        <p class="wordmark">
-          <img src="assets/logo.svg" alt="29 শিখ শালা!" width="148" height="56" />
+  <body class="govuk-template__body">
+    <script>
+      document.body.className += " js-enabled" + ("noModule" in HTMLScriptElement.prototype ? " govuk-frontend-supported" : "");
+    </script>
+    <a href="#main" class="govuk-skip-link">Skip to main content</a>
+    <div class="govuk-generic-header">
+      <div class="govuk-generic-header__container govuk-width-container">
+        <div class="govuk-generic-header__logo">
+          <a class="govuk-generic-header__homepage-link" href="#learn" data-act="nav" data-mode="learn">
+            <img src="assets/logo.svg" alt="29 শিখ শালা!" width="58" height="22" />
+          </a>
+        </div>
+        <p class="govuk-body-s legend" title="How many points a card scores when your side wins the trick">
+          Jack 3, nine 2, ace 1, ten 1, others 0
         </p>
-        <nav id="nav">
-          <button type="button" data-act="nav" data-mode="learn">Learn</button>
-          <button type="button" data-act="nav" data-mode="play">Play</button>
-          <button type="button" data-act="nav" data-mode="rules">Rules</button>
-        </nav>
-        <p class="langs">
-          <button type="button" data-act="lang" data-lang="en" aria-current="true">English</button>
-          <button type="button" data-act="lang" data-lang="bn">বাংলা</button>
-          <span id="ip-country" class="ip-country" hidden></span>
-        </p>
-        <p class="legend" title="How many points a card scores when your side wins the trick">
-          <span>Card points</span>
-          J 3 · 9 2 · A 1 · 10 1 · rest 0
-        </p>
-        <button type="button" id="install" data-act="install" hidden>Install</button>
-      </header>
-      <div class="layout">
-        <div id="felt" class="felt"></div>
-        <aside id="pad" class="pad"></aside>
       </div>
+    </div>
+    <section class="govuk-service-navigation" aria-label="Service information" data-module="govuk-service-navigation">
+      <div class="govuk-width-container govuk-service-navigation__inlining-container">
+        <div class="govuk-service-navigation__container">
+          <nav aria-label="Menu" class="govuk-service-navigation__wrapper" id="nav">
+            <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden aria-hidden="true">
+              Menu
+            </button>
+            <ul class="govuk-service-navigation__list" id="navigation">
+              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+                <a class="govuk-service-navigation__link" href="#learn" data-act="nav" data-mode="learn" data-label="Learn" aria-current="page">
+                  <strong class="govuk-service-navigation__active-fallback">Learn</strong>
+                </a>
+              </li>
+              <li class="govuk-service-navigation__item">
+                <a class="govuk-service-navigation__link" href="#play" data-act="nav" data-mode="play" data-label="Play">Play</a>
+              </li>
+              <li class="govuk-service-navigation__item">
+                <a class="govuk-service-navigation__link" href="#rules" data-act="nav" data-mode="rules" data-label="Rules">Rules</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mast-end">
+          <nav class="govuk-language-navigation" aria-label="Language">
+            <ul class="govuk-language-navigation__list">
+              <li class="govuk-language-navigation__list-item">
+                <span class="govuk-language-navigation__text" aria-current="true" lang="en" data-lang="en">English</span>
+              </li>
+              <li class="govuk-language-navigation__list-item">
+                <a class="govuk-language-navigation__link" href="?lang=bn" rel="alternate" lang="bn" hreflang="bn" data-act="lang" data-lang="bn">বাংলা</a>
+              </li>
+            </ul>
+          </nav>
+          <a id="install" class="govuk-link" href="#install" data-act="install" hidden>Install</a>
+        </div>
+      </div>
+    </section>
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper" id="main">
+        <div class="layout">
+          <div id="felt" class="felt"></div>
+          <aside id="pad" class="pad" aria-label="Guidance"></aside>
+        </div>
+      </main>
     </div>
     <script src="js/i18n.js"></script>
     <script src="js/engine.js"></script>

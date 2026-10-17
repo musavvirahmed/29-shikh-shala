@@ -128,23 +128,51 @@ id: legend.points
 en: Card points
 bn: তাসের পয়েন্ট
 
+id: legend.line
+en: Jack 3, nine 2, ace 1, ten 1, others 0
+bn: গোলাম 3, নয় 2, টেক্কা 1, দশ 1, বাকি 0
+
 # Lesson buttons
 
 id: lesson.kicker
 en: Lesson {n} of {total}
-bn: লেসন {n} / {total}
+bn: প্রশ্ন {n} / {total}
 
 id: lesson.goto
 en: Lesson {n}
-bn: লেসন {n}
+bn: প্রশ্ন {n}
 
 id: lesson.next
 en: Next
-bn: পরের
+bn: পরবর্তী প্রশ্ন
 
 id: lesson.back
 en: Back
-bn: আগের
+bn: পূর্ববর্তী প্রশ্ন
+
+id: lesson.continue
+en: Check
+bn: যাচাই
+
+id: lesson.select
+en: Select an answer
+bn: একটি উত্তর বেছে নিন
+
+id: lesson.problem
+en: There is a problem
+bn: একটি সমস্যা আছে
+
+id: lesson.error
+en: Error
+bn: ত্রুটি
+
+id: chrome.skip
+en: Skip to main content
+bn: মূল অংশে যান
+
+id: chrome.menu
+en: Menu
+bn: মেনু
 
 id: lesson.deal
 en: Deal a hand
@@ -167,6 +195,10 @@ bn: আপনি নিচে বসেন। সঙ্গী সামনে।
 id: play.deal
 en: Deal
 bn: ভাগ করুন
+
+id: play.log
+en: This hand
+bn: এই হাত
 
 id: play.quiet
 en: Short notes
@@ -727,32 +759,32 @@ en: You, then Right, then Partner, then Left
 bn: আপনি, তারপর ডান, তারপর সঙ্গী, তারপর বাঁ
 
 id: lesson.seats.0.coach
-en: Four seats, two sides. Partner sits across the felt. Left and Right play against you. The deal and the play both run to your right.
-bn: সর্বমোট চার জন খেলোয়াড়, দুইটা দলে বিভক্ত। আপনার সঙ্গী আপনার উল্টা দিকে বসা। বাম ও ডান দিকে বসা বিপরীত দল। তাস বাটা হবে বাম থেকে ডানে। খেলাও বাম থেকে ডান দিকে যাবে।
+en: Four seats, two sides. Partner sits across the felt. Left and Right play against you. Left dealt, so you lead. Play runs to your right.
+bn: সর্বমোট চার জন খেলোয়াড়, দুইটা দলে বিভক্ত। আপনার সঙ্গী আপনার উল্টা দিকে বসা। বাম ও ডান দিকে বসা বিপরীত দল। বাঁ বাটেছেন, তাই আপনি প্রথম খেলেন। খেলা আপনার ডানে যায়।
 
 id: lesson.seats.0.c0
-en: Partner plays the next card
-bn: সঙ্গী পরের তাস খেলেন
+en: Partner plays after you
+bn: আপনার পরে সঙ্গী খেলেন
 
 id: lesson.seats.0.w0
-en: Partner plays third. The seat on your right plays second.
-bn: সঙ্গী তৃতীয় খেলেন। আপনার ডানের আসন দ্বিতীয় খেলে।
+en: No. Partner sits across, so Partner plays third. Right plays second.
+bn: না। সঙ্গী উল্টা দিকে বসা, তাই সঙ্গী তৃতীয় খেলেন। ডান দ্বিতীয় খেলে।
 
 id: lesson.seats.0.c1
-en: Right plays the next card
-bn: ডান পরের তাস খেলেন
+en: Right plays after you
+bn: আপনার পরে ডান খেলেন
 
 id: lesson.seats.0.w1
-en: Play runs to your right: you, Right, Partner, Left, then you again.
-bn: খেলা আপনার ডানে যায়। ক্রম: আপনি, ডান, সঙ্গী, বাঁ, তারপর আবার আপনি।
+en: Yes. Play runs to your right: you, then Right, then Partner, then Left.
+bn: হ্যাঁ। খেলা আপনার ডানে যায়। ক্রম: আপনি, তারপর ডান, তারপর সঙ্গী, তারপর বাঁ।
 
 id: lesson.seats.0.c2
-en: Left plays the next card
-bn: বাঁ পরের তাস খেলেন
+en: Left plays after you
+bn: আপনার পরে বাঁ খেলেন
 
 id: lesson.seats.0.w2
-en: Left plays last in the round, just before the lead comes back to you.
-bn: বাঁ এই চালের শেষ তাস খেলেন। তারপর চাল আবার আপনার কাছে আসে।
+en: No. Left dealt and plays last this round. Right plays second.
+bn: না। বাঁ বাটেছেন, আর এই চালে শেষে খেলেন। ডান দ্বিতীয় খেলে।
 
 id: lesson.seats.1.ribbon
 en: Two sides
@@ -1312,7 +1344,7 @@ bn: চার জন খেলেন। দুই জোড়া। আপন�
 
 id: rules.note
 en: The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.
-bn: লেসন ও বট এই নিয়ম ব্যবহার করে। অন্য টেবিল অন্য নিয়ম ব্যবহার করলে এই পাতা সেই নিয়মের নাম বলে।
+bn: প্রশ্ন ও বট এই নিয়ম ব্যবহার করে। অন্য টেবিল অন্য নিয়ম ব্যবহার করলে এই পাতা সেই নিয়মের নাম বলে।
 
 id: rules.pack.h
 en: The pack
@@ -1529,3 +1561,77 @@ bn: ছয় লাল দাগে ম্যাচ জয়। ছয় ক�
 id: rules.colophon
 en: The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.
 bn: তাসের পয়েন্ট ও বিয়ের সংখ্যা John McLeod-এর নোট অনুসরণ করে। সেই নোট pagat.com-এ আছে। Asif Al Hye সেই পাতায় বাংলাদেশের নিয়ম জানান। Shishir Sharif সেই পাতায় এক-বিড ডাক জানান। তাসের মুখ PySolFC-এর Standard কার্ডসেট। John Fitzgibbon ও Jochen Tuchbreiter সেই কার্ডসেট আঁকেন। টেবিলের কাপড় PySolFC-এর Felt Green টাইল।
+
+# Lesson questions
+
+id: lesson.seats.0.ask
+en: You lead. Who plays after you?
+bn: আপনি প্রথম খেলেন। আপনার পরে কে খেলে?
+
+id: lesson.seats.1.ask
+en: Who do you score with?
+bn: কার সঙ্গে আপনার পয়েন্ট যোগ হয়?
+
+id: lesson.rank.0.ask
+en: Which card wins the trick?
+bn: কোন তাস চাল নেয়?
+
+id: lesson.rank.1.ask
+en: Which card wins the trick?
+bn: কোন তাস চাল নেয়?
+
+id: lesson.points.0.ask
+en: How many card points are in this trick?
+bn: এই চালে কত পয়েন্ট?
+
+id: lesson.points.1.ask
+en: How many points are in the pack?
+bn: প্যাকে কত পয়েন্ট?
+
+id: lesson.bid.0.ask
+en: What do you bid?
+bn: আপনি কী বিড করেন?
+
+id: lesson.bid.1.ask
+en: What happens to this hand?
+bn: এই হাতের কী হয়?
+
+id: lesson.hidden.0.ask
+en: Who is winning the trick?
+bn: কে চাল জিতছেন?
+
+id: lesson.hidden.1.ask
+en: Who takes the trick after you ask?
+bn: আপনি ডাকলে কে চাল নেন?
+
+id: lesson.hidden.2.ask
+en: What do you call for trump?
+bn: ট্রাম্পের জন্য আপনি কী ডাকেন?
+
+id: lesson.ask.0.ask
+en: What do you do?
+bn: আপনি কী করেন?
+
+id: lesson.ask.1.ask
+en: Do you ask for trump?
+bn: আপনি কি ট্রাম্প ডাকেন?
+
+id: lesson.marriage.0.ask
+en: What does the target become?
+bn: লক্ষ্য কত হয়?
+
+id: lesson.marriage.1.ask
+en: What happens to a bid of 17?
+bn: 17 বিডের কী হয়?
+
+id: lesson.marriage.2.ask
+en: What happens to your target?
+bn: আপনার লক্ষ্যের কী হয়?
+
+id: lesson.pips.0.ask
+en: What does the match score show?
+bn: ম্যাচের স্কোর কী দেখায়?
+
+id: lesson.pips.1.ask
+en: How many red pips do you uncover?
+bn: আপনি কত লাল দাগ খোলেন?
