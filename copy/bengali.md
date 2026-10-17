@@ -1312,7 +1312,7 @@ bn: চার জন খেলেন। দুই জোড়া। আপন�
 
 id: rules.note
 en: The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.
-bn: পাঠ ও বট এই নিয়ম ব্যবহার করে। অন্য টেবিল অন্য নিয়ম ব্যবহার করলে এই পাতা সেই নিয়মের নাম বলে।
+bn: লেসন ও বট এই নিয়ম ব্যবহার করে। অন্য টেবিল অন্য নিয়ম ব্যবহার করলে এই পাতা সেই নিয়মের নাম বলে।
 
 id: rules.pack.h
 en: The pack

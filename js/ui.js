@@ -143,7 +143,7 @@
       '" aria-label="' +
       esc(seatLabel(label)) +
       " " +
-      n +
+      (typeof self !== "undefined" && self.UnotrishI18n && self.UnotrishI18n.digits ? self.UnotrishI18n.digits(n) : n) +
       '"><span>' +
       esc(seatLabel(label)) +
       '</span><b class="dots">' +

@@ -343,7 +343,7 @@
     if (floor > 28) return html;
     const top = state.moreBids ? 28 : Math.min(28, floor + 4);
     for (let n = floor; n <= top; n++) {
-      html += '<button type="button" data-act="bid" data-value="' + n + '"' + (n === floor ? ' class="primary"' : "") + ">" + n + "</button>";
+      html += '<button type="button" data-act="bid" data-value="' + n + '"' + (n === floor ? ' class="primary"' : "") + ">" + window.UnotrishI18n.digits(n) + "</button>";
     }
     if (!state.moreBids && top < 28) html += '<button type="button" data-act="morebids">' + UI.esc(tx("play.higher", "Higher")) + "</button>";
     return html;
