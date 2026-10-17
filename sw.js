@@ -1,4 +1,4 @@
-const CACHE = "twenty-nine-govuk-17";
+const CACHE = "twenty-nine-govuk-18";
 const FILES = [
   "./",
   "./index.html",
@@ -14,6 +14,7 @@ const FILES = [
   "./js/bots.js",
   "./js/lessons.js",
   "./js/ui.js",
+  "./js/rules.js",
   "./js/main.js",
   "./assets/tiles/Felt_Green.png",
   "./icons/favicon.svg",

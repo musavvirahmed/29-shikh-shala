@@ -3,9 +3,21 @@
   const Bots = window.TwentyNineBots;
   const Lessons = window.TwentyNineLessons;
   const UI = window.TwentyNineUI;
+  const Rules = window.TwentyNineRules;
+
+  const LESSON_RULE = {
+    seats: "deal",
+    rank: "rank",
+    points: "rank",
+    bid: "auction",
+    hidden: "ask",
+    marriage: "marriage",
+    pips: "pips",
+  };
 
   const state = {
     mode: "learn",
+    section: null,
     lesson: 0,
     step: 0,
     picked: null,
@@ -79,6 +91,16 @@
         el.replaceWith(a);
       }
     });
+  }
+
+  function applyRoute(route, syncHash) {
+    if (!route) return;
+    state.mode = route.mode;
+    state.section = route.mode === "rules" ? route.section : null;
+    if (syncHash) {
+      const next = Rules.hashFor(state.mode, state.section);
+      if (location.hash !== next) history.replaceState(null, "", next);
+    }
   }
 
   function render() {
@@ -200,6 +222,7 @@
       '<div id="answer-hint" class="govuk-hint">' +
       UI.esc(tx(lessonKey + ".coach", step.coach)) +
       "</div>" +
+      rulesMoreHTML(lesson.id) +
       error +
       '<div class="govuk-radios" data-module="govuk-radios">' +
       radios +
@@ -212,10 +235,25 @@
     if (problem) problem.focus();
   }
 
+  function rulesMoreHTML(lessonId) {
+    const section = LESSON_RULE[lessonId];
+    if (!section) return "";
+    return (
+      '<p class="govuk-body-s rules-more">' +
+      Rules.rulesLink(section, tx("rules.more", "More in Rules"), UI.esc) +
+      "</p>"
+    );
+  }
+
   function renderRules() {
     felt.classList.add("paper");
     pad.innerHTML = "";
-    felt.innerHTML = rulesHTML();
+    felt.innerHTML = Rules.rulesHTML(tx, UI.esc, state.section);
+    if (!state.section) return;
+    const target = felt.querySelector("#rules-" + state.section);
+    if (target) {
+      if (typeof target.scrollIntoView === "function") target.scrollIntoView({ block: "start" });
+    }
   }
 
   function renderPlay() {
@@ -230,7 +268,14 @@
         '</p><h1 class="govuk-heading-l">' +
         UI.esc(tx("play.sit", "Sit down")) +
         '</h1><p class="govuk-body">' +
-        UI.esc(tx("play.sitCoach", "You sit at the bottom. Partner sits across. Left deals the first hand, so you bid first. Four cards, then a promise, then four more.")) +
+        UI.esc(
+          tx(
+            "play.sitCoach",
+            "You sit at the bottom. Partner sits across. The seat called Left deals the first hand, so you bid first. Four cards, then a promise, then four more."
+          )
+        ) +
+        '</p><p class="govuk-body-s rules-more">' +
+        Rules.rulesLink("deal", tx("rules.more", "More in Rules"), UI.esc) +
         '</p><button type="button" class="govuk-button" data-act="deal">' +
         UI.esc(tx("play.deal", "Deal")) +
         "</button>";
@@ -496,7 +541,7 @@
       return;
     }
     if (name === "nav") {
-      state.mode = node.dataset.mode;
+      applyRoute({ mode: node.dataset.mode, section: null }, true);
       state.botToken++;
       render();
       return;
@@ -561,7 +606,7 @@
       return;
     }
     if (name === "deal" || name === "newmatch") {
-      state.mode = "play";
+      applyRoute({ mode: "play", section: null }, true);
       state.match = TN.newMatch();
       state.auto = false;
       state.moreBids = false;
@@ -717,6 +762,16 @@
 
   initServiceNavigation();
 
+  applyRoute(Rules.parseHash(location.hash) || { mode: "learn", section: null }, true);
+
+  window.addEventListener("hashchange", () => {
+    const route = Rules.parseHash(location.hash);
+    if (!route) return;
+    applyRoute(route, false);
+    state.botToken++;
+    render();
+  });
+
   window.UnotrishI18n.loadCopy("copy/bengali.md")
     .catch(() => {})
     .then(() => {
@@ -724,75 +779,4 @@
       return window.UnotrishI18n.start();
     })
     .then(() => render());
-
-  function P(key, en) {
-    return '<p class="govuk-body">' + UI.esc(tx(key, en)) + "</p>";
-  }
-
-  function Li(key, en) {
-    return "<li>" + UI.esc(tx(key, en)) + "</li>";
-  }
-
-  function rulesHTML() {
-    return (
-      '<article class="rules">' +
-      '<h1 class="govuk-heading-l">' + UI.esc(tx("rules.title", "How this table plays 29")) + "</h1>" +
-      P("rules.lead", "Four players play in two pairs. Your partner sits across from you. The pack has 32 cards. The jack and the nine rank above the ace. Play moves to your right.") +
-      P("rules.note", "The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.") +
-      section("rules.pack.h", "The pack",
-        P("rules.pack.1", "The rank, from high to low, is jack, nine, ace, ten, king, queen, eight, seven.") +
-        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.pack.j", "Jack: 3 points") + Li("rules.pack.9", "Nine: 2 points") + Li("rules.pack.a", "Ace: 1 point") + Li("rules.pack.10", "Ten: 1 point") + Li("rules.pack.0", "King, queen, eight, and seven: 0 points") + "</ul>" +
-        P("rules.pack.2", "Four suits give 28 points. The last trick adds no point. The name of the game is still 29.")
-      ) +
-      section("rules.deal.h", "The deal",
-        P("rules.deal.1", "Left deals the first hand. The next dealer is the player on the right. Each player receives four cards.") +
-        P("rules.deal.2", "Stop the deal if either of these hands has no points:") +
-        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.deal.3", "The player to the right of the dealer") + Li("rules.deal.4", "The partner of the dealer") + "</ul>" +
-        P("rules.deal.5", "The other two players may hold no points. The deal still continues.")
-      ) +
-      section("rules.auction.h", "The auction",
-        P("rules.auction.1", "A bid is a whole number from 16 to 28. Each player speaks once. The player to the right of the dealer speaks first. A new bid must be higher than the current bid. The highest bidder chooses trump.") +
-        P("rules.auction.2", "If all four players pass, the hand ends. The dealer does not have to bid 16.") +
-        P("rules.auction.3", "Some tables in Bangladesh use a different auction. After a pass, the partner of that player may bid. A player may match the bid and say “ditto”. The auction ends when one side stops. This table does not use that auction.") +
-        P("rules.auction.4", "One bid for each player is also a Bangladesh rule. This table uses that rule.")
-      ) +
-      section("rules.trump.h", "Trump",
-        P("rules.trump.1", "The bidder may name a suit from the first four cards. Or the bidder may call the seventh card.") +
-        P("rules.trump.2", "The seventh card is the third of the next four cards. The bidder does not see it yet. That card becomes trump. It stays face down, outside the hand.") +
-        P("rules.trump.3", "If the bidder names a suit, each player receives four more cards. The bidder then puts one trump face down. That card stays out of the hand until a player asks.") +
-        P("rules.trump.4", "Before a player asks, trump has no power. The bidder cannot lead trump. A trump on another suit is only a card of its own suit.") +
-        P("rules.trump.5", "Stop a seventh-card deal in either case:") +
-        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.trump.6", "The bidder has no other trump that scores points.") + Li("rules.trump.7", "The other side has no trump, or only the seven.") + "</ul>"
-      ) +
-      section("rules.double.h", "Double",
-        P("rules.double.1", "An opponent may double after the bidder chooses trump, and before the next four cards. A double makes the hand worth 2 pips. The bidding side may then redouble. A redouble makes the hand worth 4 pips. Both sides decide from the first four cards only. With no double, the hand is worth 1 pip.")
-      ) +
-      section("rules.ask.h", "Asking",
-        P("rules.ask.1", "Follow the led suit if you have a card of that suit.") +
-        P("rules.ask.2", "If you have no card of the led suit, choose one:") +
-        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.ask.3", "Discard a card from another suit.") + Li("rules.ask.4", "Ask for trump.") + "</ul>" +
-        P("rules.ask.5", "If you ask, the bidder shows the face-down card. That suit is trump for this trick and for the rest of the hand. You must play a trump if you have one. A card of that suit already in the trick can win.") +
-        P("rules.ask.6", "At some tables, the first player who cannot follow must ask. That player may then discard. At this table, you choose whether to ask.") +
-        P("rules.ask.7", "After trump is known, follow the led suit if you can. If you cannot follow, you may play a trump or a discard. If you play a trump and can beat the trump in the trick, you must beat it.") +
-        P("rules.ask.8", "If no player asks before the last trick, the hand ends. Neither side scores.")
-      ) +
-      section("rules.marriage.h", "Marriage",
-        P("rules.marriage.1", "A marriage is the king and queen of trump in one hand. Only the bidding side may show it, after trump is face up.") +
-        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.marriage.16", "Bid 16, 17, or 18: the target does not change.") + Li("rules.marriage.19", "Bid 19 or 20: the target becomes 16.") + Li("rules.marriage.21", "Bid 21: the target becomes 17.") + Li("rules.marriage.22", "Bid 22 or higher: subtract 4. The target does not go below 16.") + "</ul>" +
-        P("rules.marriage.2", "The Bangladesh note gives the rule for 19, 20, and 21. It does not give a rule for 22 or higher. The rule for 22 or higher is the rule of this table.") +
-        P("rules.marriage.3", "The king and queen of the other side do not change the target.")
-      ) +
-      section("rules.pips.h", "Pips",
-        P("rules.pips.1", "A pip is one point on the match score. Only the score of the bidding side changes.") +
-        '<ul class="govuk-list govuk-list--bullet">' + Li("rules.pips.red", "A made contract shows 1 red pip.") + Li("rules.pips.black", "A missed contract shows 1 black pip.") + Li("rules.pips.double", "A double is worth 2 pips.") + Li("rules.pips.redouble", "A redouble is worth 4 pips.") + "</ul>" +
-        P("rules.pips.2", "Six red pips win the match. Six black pips lose the match.")
-      ) +
-      '<p class="colophon">' + UI.esc(tx("rules.colophon", "The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.")) + "</p>" +
-      "</article>"
-    );
-  }
-
-  function section(titleKey, title, body) {
-    return '<section><h2 class="govuk-heading-m">' + UI.esc(tx(titleKey, title)) + "</h2>" + body + "</section>";
-  }
 })();

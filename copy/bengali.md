@@ -189,8 +189,8 @@ en: Sit down
 bn: বসুন
 
 id: play.sitCoach
-en: You sit at the bottom. Partner sits across. Left deals the first hand, so you bid first. Four cards, then a promise, then four more.
-bn: আপনি নিচে বসেন। সঙ্গী সামনে। বাঁ প্রথম হাত ডিল করেন। তাই আপনি আগে বিড করেন। চার তাস, তারপর এক প্রতিশ্রুতি, তারপর আরও চার তাস।
+en: You sit at the bottom. Partner sits across. The seat called Left deals the first hand, so you bid first. Four cards, then a promise, then four more.
+bn: আপনি নিচে বসেন। সঙ্গী সামনে। বাঁ নামের আসন প্রথম হাত ডিল করেন। তাই আপনি আগে বিড করেন। চার তাস, তারপর এক প্রতিশ্রুতি, তারপর আরও চার তাস।
 
 id: play.deal
 en: Deal
@@ -1331,56 +1331,52 @@ bn: কালো দাগ মানে চুক্তি ভাঙে। আ�
 # Rules
 
 id: rules.title
-en: How this table plays 29
-bn: এই টেবিল কীভাবে উনত্রিশ খেলে
+en: How to play 29
+bn: উনত্রিশ কীভাবে খেলবেন
 
 id: rules.lead
-en: Four players play in two pairs. Your partner sits across from you. The pack has 32 cards. The jack and the nine rank above the ace. Play moves to your right.
-bn: চার জন খেলেন। দুই জোড়া। আপনার সঙ্গী আপনার সামনে বসেন। প্যাকে 32 তাস। জ্যাক ও নয় টেক্কার উপরে। খেলা আপনার ডানে যায়।
+en: Four players play in two pairs. Your partner sits across from you. The pack keeps only seven through ace in each suit — 32 cards, with 2 through 6 left out — so the jack and nine can rank above the ace. Play moves to your right: you, then Right, then Partner, then Left.
+bn: চার জন খেলেন। দুই জোড়া। আপনার সঙ্গী আপনার সামনে বসেন। প্যাকে শুধু সাত থেকে টেক্কা থাকে — 32 তাস; 2 থেকে 6 বাদ — যাতে জ্যাক ও নয় টেক্কার উপরে থাকতে পারে। খেলা আপনার ডানে যায়: আপনি, তারপর ডান, তারপর সঙ্গী, তারপর বাঁ।
 
-id: rules.note
-en: The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.
-bn: প্রশ্ন ও বট এই নিয়ম ব্যবহার করে। অন্য টেবিল অন্য নিয়ম ব্যবহার করলে এই পাতা সেই নিয়মের নাম বলে।
+id: rules.rank.h
+en: Rank and points
+bn: ক্রম ও পয়েন্ট
 
-id: rules.pack.h
-en: The pack
-bn: প্যাক
-
-id: rules.pack.1
+id: rules.rank.1
 en: The rank, from high to low, is jack, nine, ace, ten, king, queen, eight, seven.
 bn: বড় থেকে ছোট ক্রম: জ্যাক, নয়, টেক্কা, দশ, রাজা, রানী, আট, সাত।
 
-id: rules.pack.j
+id: rules.rank.j
 en: Jack: 3 points
 bn: জ্যাক: 3 পয়েন্ট
 
-id: rules.pack.9
+id: rules.rank.9
 en: Nine: 2 points
 bn: নয়: 2 পয়েন্ট
 
-id: rules.pack.a
+id: rules.rank.a
 en: Ace: 1 point
 bn: টেক্কা: 1 পয়েন্ট
 
-id: rules.pack.10
+id: rules.rank.10
 en: Ten: 1 point
 bn: দশ: 1 পয়েন্ট
 
-id: rules.pack.0
+id: rules.rank.0
 en: King, queen, eight, and seven: 0 points
 bn: রাজা, রানী, আট ও সাত: 0 পয়েন্ট
 
-id: rules.pack.2
-en: Four suits give 28 points. The last trick adds no point. The name of the game is still 29.
-bn: চার রঙে 28 পয়েন্ট। শেষ চাল কোনো পয়েন্ট যোগ করে না। খেলার নাম তবু উনত্রিশ।
+id: rules.rank.2
+en: Four suits give 28 card points. The last trick adds no point. The name of the game is still 29.
+bn: চার রঙে 28 কার্ড পয়েন্ট। শেষ চাল কোনো পয়েন্ট যোগ করে না। খেলার নাম তবু উনত্রিশ।
 
 id: rules.deal.h
 en: The deal
 bn: ডিল
 
 id: rules.deal.1
-en: Left deals the first hand. The next dealer is the player on the right. Each player receives four cards.
-bn: বাঁ প্রথম হাত ডিল করেন। পরের ডিলার ডানের খেলোয়াড়। প্রতিটি খেলোয়াড় চার তাস পান।
+en: The seat called Left deals the first hand. The next dealer is the player on your right (Right). Each player receives four cards.
+bn: বাঁ নামের আসন প্রথম হাত ডিল করেন। পরের ডিলার আপনার ডানের খেলোয়াড় (ডান)। প্রতিটি খেলোয়াড় চার তাস পান।
 
 id: rules.deal.2
 en: Stop the deal if either of these hands has no points:
@@ -1554,9 +1550,21 @@ id: rules.pips.2
 en: Six red pips win the match. Six black pips lose the match.
 bn: ছয় লাল দাগে ম্যাচ জয়। ছয় কালো দাগে ম্যাচ হার।
 
-id: rules.colophon
-en: The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.
-bn: তাসের পয়েন্ট ও বিয়ের সংখ্যা John McLeod-এর নোট অনুসরণ করে। সেই নোট pagat.com-এ আছে। Asif Al Hye সেই পাতায় বাংলাদেশের নিয়ম জানান। Shishir Sharif সেই পাতায় এক-বিড ডাক জানান। তাসের মুখ PySolFC-এর Standard কার্ডসেট। John Fitzgibbon ও Jochen Tuchbreiter সেই কার্ডসেট আঁকেন। টেবিলের কাপড় PySolFC-এর Felt Green টাইল।
+id: rules.refs.h
+en: Notes
+bn: নোট
+
+id: rules.refs.1
+en: Card points, marriage numbers, Bangladesh house rules, and the one-bid auction: John McLeod’s Twenty-Nine page at pagat.com (Asif Al Hye; Shishir Sharif).
+bn: তাসের পয়েন্ট, বিয়ের সংখ্যা, বাংলাদেশের ঘরের নিয়ম ও এক-বিড ডাক: pagat.com-এ John McLeod-এর Twenty-Nine পাতা (Asif Al Hye; Shishir Sharif)।
+
+id: rules.refs.2
+en: Card faces: Standard cardset from PySolFC (John Fitzgibbon and Jochen Tuchbreiter). Table cloth: Felt Green tile from PySolFC.
+bn: তাসের মুখ: PySolFC-এর Standard কার্ডসেট (John Fitzgibbon ও Jochen Tuchbreiter)। টেবিলের কাপড়: PySolFC-এর Felt Green টাইল।
+
+id: rules.more
+en: More in Rules
+bn: নিয়মে আরও
 
 # Lesson questions
 
