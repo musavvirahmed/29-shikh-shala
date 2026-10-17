@@ -51,6 +51,7 @@
       steps: [
         {
           ribbon: "You, then Right, then Partner, then Left",
+          ask: "Who plays the next card?",
           coach:
             "Four seats, two sides. Partner sits across the felt. Left and Right play against you. The deal and the play both run to your right.",
           view: scene({
@@ -82,6 +83,7 @@
         },
         {
           ribbon: "Two sides",
+          ask: "Who do you score with?",
           coach: "Points you take and points Partner takes go on the same side of the ledger.",
           view: scene({
             seats: {
@@ -117,6 +119,7 @@
       steps: [
         {
           ribbon: "No trump named",
+          ask: "Which card wins the trick?",
           coach:
             "These four spades fell on one trick, and trump was never named. The ace is not the top card in this game.",
           view: scene({
@@ -148,6 +151,7 @@
         },
         {
           ribbon: "Hearts led",
+          ask: "Which card wins the trick?",
           coach: "Same rule, another suit. Highest card of the suit that was led, while trump is still hidden.",
           view: scene({
             ribbon: "Hearts led · trump hidden",
@@ -171,6 +175,7 @@
       title: "Twenty-eight, counted",
       steps: [
         {
+          ask: "How many card points are in this trick?",
           coach: "Only four ranks are worth anything. How many card points are in this trick?",
           view: scene({
             ribbon: "Count the trick",
@@ -188,6 +193,7 @@
           ],
         },
         {
+          ask: "How many points are in the pack?",
           coach: "A suit is jack 3, nine 2, ace 1, ten 1. Four suits are on the table. How many points are in the pack?",
           view: scene({
             ribbon: "The whole pack",
@@ -219,6 +225,7 @@
       title: "Sixteen is a promise",
       steps: [
         {
+          ask: "What do you bid?",
           coach:
             "Left dealt, so you speak first. These are your four cards: jack and nine of hearts, king of spades, seven of diamonds. Five points, and a suit you can name. The smallest bid is 16, out of 28.",
           view: scene({
@@ -250,6 +257,7 @@
           ],
         },
         {
+          ask: "What happens to this hand?",
           coach:
             "A different deal. You are on the dealer's right again, and your four cards are a king, a queen, an eight and a seven. No points at all.",
           view: scene({
@@ -287,6 +295,7 @@
       title: "A heart is not trump yet",
       steps: [
         {
+          ask: "Who is winning the trick?",
           coach:
             "You won the bid at 17 and named hearts. One heart is face down in front of you. Left led the ten of spades, Right played the jack of hearts without asking, and Partner played the eight of spades. Who is winning?",
           view: scene({
@@ -318,6 +327,7 @@
           ],
         },
         {
+          ask: "Who takes the trick after you ask?",
           coach:
             "Same cards, one change. You have no spade, so you ask. The face-down card is turned up and hearts are trump for this trick and every trick after it. The jack of hearts was already on the table.",
           view: scene({
@@ -347,6 +357,7 @@
           ],
         },
         {
+          ask: "What do you call for trump?",
           coach:
             "Your four cards are the jack and nine of hearts, the king of spades and the seven of diamonds. You may name a suit, or you may call the seventh card: the third new card you are dealt, still unseen, becomes trump and sits face down.",
           view: scene({
@@ -380,6 +391,7 @@
       title: "Ask on purpose",
       steps: [
         {
+          ask: "What do you do?",
           coach:
             "Spades were led. Partner's ace is winning the trick, ahead of a king and a seven. You have no spade. Trump is still hidden, and you hold the jack of hearts. What do you do?",
           view: scene({
@@ -414,6 +426,7 @@
           ],
         },
         {
+          ask: "Do you ask for trump?",
           coach:
             "This time Partner's seven is losing to a jack, and a nine is in the trick too. That is five points if nothing changes. You have no card of the led suit, and you do not know the hidden suit.",
           view: scene({
@@ -454,6 +467,7 @@
       title: "King and queen of trump",
       steps: [
         {
+          ask: "What does the target become?",
           coach:
             "Hearts are revealed. The bid was 20. You still hold the king and queen of hearts. If you show them, what does the target become?",
           view: scene({
@@ -480,6 +494,7 @@
           ],
         },
         {
+          ask: "What happens to a bid of 17?",
           coach: "Same cards, but the bid was 17.",
           view: scene({
             ribbon: "Bid 17 · hearts revealed",
@@ -505,6 +520,7 @@
           ],
         },
         {
+          ask: "What happens to your target?",
           coach: "You are the bidding side. The other side is the one holding the king and queen of trump.",
           view: scene({
             ribbon: "Their king and queen",
@@ -539,6 +555,7 @@
       title: "Red six, black six",
       steps: [
         {
+          ask: "What does the match score show?",
           coach:
             "You promised 16 and your side took 18 card points. The match is scored in pips, on a red six and a black six, and it ends at six of either colour.",
           view: scene({
@@ -567,6 +584,7 @@
           ],
         },
         {
+          ask: "How many red pips do you uncover?",
           coach: "Before the second half of the deal, Right doubled. You still made the contract. How many red pips?",
           view: scene({
             ribbon: "Doubled · worth two pips",

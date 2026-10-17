@@ -9,6 +9,8 @@
     lesson: 0,
     step: 0,
     picked: null,
+    selected: null,
+    missing: false,
     match: null,
     auto: false,
     quiet: false,
@@ -51,72 +53,81 @@
     view.ribbon = step.ribbon || view.ribbon;
     felt.innerHTML = UI.feltHTML(view);
     felt.classList.remove("paper");
-    const choices = step.choices
+    const revealed = state.picked && state.picked.index === state.selected;
+    const wrong = revealed && !state.picked.correct;
+    const radios = step.choices
       .map((choice, index) => {
-        let mark = "";
-        if (state.picked) mark = choice.correct ? " right" : state.picked.index === index ? " wrong" : "";
+        const id = "answer-" + state.lesson + "-" + state.step + "-" + index;
+        const checked = state.selected === index ? " checked" : "";
         return (
-          '<button type="button" class="govuk-button govuk-button--secondary choice' +
-          mark +
+          '<div class="govuk-radios__item">' +
+          '<input class="govuk-radios__input" id="' +
+          id +
+          '" name="lesson-answer" type="radio" value="' +
+          index +
           '" data-act="choose" data-index="' +
           index +
+          '"' +
+          checked +
+          ">" +
+          '<label class="govuk-label govuk-radios__label" for="' +
+          id +
           '">' +
           UI.esc(choice.label) +
-          "</button>"
+          "</label></div>"
         );
       })
       .join("");
-    let why = "";
-    if (state.picked) {
-      const text = UI.esc(step.choices[state.picked.index].why);
-      why = state.picked.correct
-        ? '<div class="govuk-inset-text">' + text + "</div>"
-        : '<p class="govuk-error-message"><span class="govuk-visually-hidden">Error: </span>' + text + "</p>";
-    }
+    const why = revealed ? UI.esc(step.choices[state.picked.index].why) : "";
+    const error = state.missing
+      ? '<p id="answer-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error: </span>Select an answer</p>'
+      : wrong
+        ? '<p id="answer-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error: </span>' + why + "</p>"
+        : "";
+    const summary = state.missing
+      ? '<div class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1">' +
+        '<h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>' +
+        '<div class="govuk-error-summary__body"><ul class="govuk-list govuk-error-summary__list">' +
+        '<li><a href="#lesson-answer">Select an answer</a></li></ul></div></div>'
+      : "";
+    const inset = revealed && state.picked.correct ? '<div class="govuk-inset-text">' + why + "</div>" : "";
     const last = state.step === lesson.steps.length - 1 && state.lesson === Lessons.lessons.length - 1;
-    const nextLabel = last ? "Deal a hand" : "Next";
-    const nextAct = last ? "deal" : "next-step";
+    const buttonLabel = revealed && last ? "Deal a hand" : "Continue";
     const back =
       state.step > 0 || state.lesson > 0
         ? '<a class="govuk-back-link" href="#back" data-act="prev-step">Back</a>'
         : "";
     pad.innerHTML =
       back +
-      '<p class="govuk-caption-m">Lesson ' +
+      summary +
+      '<div class="govuk-form-group' +
+      (state.missing || wrong ? " govuk-form-group--error" : "") +
+      '">' +
+      '<fieldset class="govuk-fieldset" id="lesson-answer" aria-describedby="answer-hint' +
+      (error ? " answer-error" : "") +
+      '">' +
+      '<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">' +
+      '<span class="govuk-caption-l">Lesson ' +
       (state.lesson + 1) +
       " of " +
       Lessons.lessons.length +
-      "</p>" +
-      '<h1 class="govuk-heading-l">' +
-      UI.esc(lesson.title) +
-      "</h1>" +
-      '<ol class="lesson-index">' +
-      Lessons.lessons
-        .map((_, index) => {
-          const current = index === state.lesson ? ' aria-current="page"' : "";
-          const text = index === state.lesson ? "<strong>" + (index + 1) + "</strong>" : String(index + 1);
-          return (
-            '<li><a class="govuk-link" href="#lesson-' +
-            (index + 1) +
-            '" data-act="goto-lesson" data-lesson="' +
-            index +
-            '"' +
-            current +
-            ">" +
-            text +
-            "</a></li>"
-          );
-        })
-        .join("") +
-      "</ol>" +
-      '<p class="govuk-body">' +
+      "</span>" +
+      '<h1 class="govuk-fieldset__heading">' +
+      UI.esc(step.ask || lesson.title) +
+      "</h1></legend>" +
+      '<div id="answer-hint" class="govuk-hint">' +
       UI.esc(step.coach) +
-      "</p>" +
-      '<div class="choices">' +
-      choices +
       "</div>" +
-      why +
-      (state.picked ? '<button type="button" class="govuk-button" data-act="' + nextAct + '">' + nextLabel + "</button>" : "");
+      error +
+      '<div class="govuk-radios" data-module="govuk-radios">' +
+      radios +
+      "</div></fieldset></div>" +
+      inset +
+      '<button type="button" class="govuk-button" data-act="check">' +
+      buttonLabel +
+      "</button>";
+    const problem = pad.querySelector(".govuk-error-summary");
+    if (problem) problem.focus();
   }
 
   function renderRules() {
@@ -362,18 +373,35 @@
       if (state.mode === "play") render();
       return;
     }
-    if (name === "goto-lesson") {
-      state.lesson = Number(node.dataset.lesson);
-      state.step = 0;
-      state.picked = null;
+    if (name === "choose") {
+      state.selected = Number(node.dataset.index);
+      state.missing = false;
+      if (state.picked && state.picked.index !== state.selected) state.picked = null;
       render();
       return;
     }
-    if (name === "choose") {
+    if (name === "check") {
       const lesson = Lessons.lessons[state.lesson];
-      const index = Number(node.dataset.index);
-      state.picked = { index, correct: lesson.steps[state.step].choices[index].correct };
-      render();
+      const step = lesson.steps[state.step];
+      if (state.selected == null) {
+        state.missing = true;
+        state.picked = null;
+        render();
+        return;
+      }
+      state.missing = false;
+      if (!state.picked || state.picked.index !== state.selected) {
+        const choice = step.choices[state.selected];
+        state.picked = { index: state.selected, correct: choice.correct };
+        render();
+        return;
+      }
+      const last = state.step === lesson.steps.length - 1 && state.lesson === Lessons.lessons.length - 1;
+      if (last) {
+        act("deal", node);
+        return;
+      }
+      advance();
       return;
     }
     if (name === "next-step") {
@@ -445,6 +473,8 @@
   function advance() {
     const lesson = Lessons.lessons[state.lesson];
     state.picked = null;
+    state.selected = null;
+    state.missing = false;
     if (state.step < lesson.steps.length - 1) state.step += 1;
     else if (state.lesson < Lessons.lessons.length - 1) {
       state.lesson += 1;
@@ -455,6 +485,8 @@
 
   function retreat() {
     state.picked = null;
+    state.selected = null;
+    state.missing = false;
     if (state.step > 0) state.step -= 1;
     else if (state.lesson > 0) {
       state.lesson -= 1;
@@ -465,14 +497,16 @@
 
   document.body.addEventListener("click", (event) => {
     const node = event.target.closest("[data-act]");
-    if (!node || node.dataset.act === "quiet") return;
+    if (!node || node.dataset.act === "quiet" || node.dataset.act === "choose") return;
     if (node.tagName === "A") event.preventDefault();
     act(node.dataset.act, node);
   });
 
   document.body.addEventListener("change", (event) => {
     const node = event.target.closest("[data-act]");
-    if (node && node.dataset.act === "quiet") act("quiet", node);
+    if (!node) return;
+    if (node.dataset.act === "quiet") act("quiet", node);
+    else if (node.dataset.act === "choose") act("choose", node);
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -487,76 +521,108 @@
 
   render();
 
+  function row(key, value) {
+    return (
+      '<div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">' +
+      key +
+      '</dt><dd class="govuk-summary-list__value">' +
+      value +
+      "</dd></div>"
+    );
+  }
+
+  function details(title, body) {
+    return (
+      '<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">' +
+      title +
+      '</span></summary><div class="govuk-details__text">' +
+      body +
+      "</div></details>"
+    );
+  }
+
+  function warn(text) {
+    return (
+      '<div class="govuk-warning-text"><span class="govuk-warning-text__icon" aria-hidden="true">!</span><strong class="govuk-warning-text__text"><span class="govuk-visually-hidden">Warning</span> ' +
+      text +
+      "</strong></div>"
+    );
+  }
+
   function rulesHTML() {
     return (
       '<article class="rules">' +
       '<h1 class="govuk-heading-l">How this table plays 29</h1>' +
-      "<p>Four players play in two pairs. Your partner sits across from you. The pack has 32 cards. The jack and the nine rank above the ace. Play moves to your right.</p>" +
-      "<p>The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.</p>" +
-      section(
-        "The pack",
-        "<p>The rank, from high to low, is jack, nine, ace, ten, king, queen, eight, seven.</p>" +
-          "<ul><li>Jack: 3 points</li><li>Nine: 2 points</li><li>Ace: 1 point</li><li>Ten: 1 point</li><li>King, queen, eight, and seven: 0 points</li></ul>" +
-          "<p>Four suits give 28 points. The last trick adds no point. The name of the game is still 29.</p>"
-      ) +
-      section(
+      '<p class="govuk-body">Four players play in two pairs. Your partner sits across from you. The pack has 32 cards. The jack and the nine rank above the ace. Play moves to your right.</p>' +
+      '<p class="govuk-body">The lessons and the bots use these rules. If another table uses a different rule, this page names that rule.</p>' +
+      '<h2 class="govuk-heading-m">Card points</h2>' +
+      '<p class="govuk-body">The rank, from high to low, is jack, nine, ace, ten, king, queen, eight, seven.</p>' +
+      '<dl class="govuk-summary-list">' +
+      row("Jack", "3") +
+      row("Nine", "2") +
+      row("Ace", "1") +
+      row("Ten", "1") +
+      row("King, queen, eight, seven", "0") +
+      "</dl>" +
+      '<p class="govuk-body">Four suits give 28 points. The last trick adds no point. The name of the game is still 29.</p>' +
+      '<h2 class="govuk-heading-m">Match score</h2>' +
+      '<p class="govuk-body">A pip is one point on the match score. Only the bidding side’s score changes. Card points are not pips.</p>' +
+      '<dl class="govuk-summary-list">' +
+      row("Made", "1 red pip") +
+      row("Missed", "1 black pip") +
+      row("Doubled", "2 pips") +
+      row("Redoubled", "4 pips") +
+      row("Match", "6 red pips win. 6 black pips lose.") +
+      "</dl>" +
+      '<h2 class="govuk-heading-m">Marriage</h2>' +
+      '<p class="govuk-body">A marriage is the king and queen of trump in one hand. Only the bidding side may show it, after trump is face up.</p>' +
+      '<dl class="govuk-summary-list">' +
+      row("Bid 16, 17 or 18", "The target does not change") +
+      row("Bid 19 or 20", "The target becomes 16") +
+      row("Bid 21", "The target becomes 17") +
+      row("Bid 22 or higher", "Subtract 4. The target does not go below 16") +
+      "</dl>" +
+      '<div class="govuk-inset-text">The Bangladesh note gives the rule for 19, 20, and 21. It does not give a rule for 22 or higher. The rule for 22 or higher is the rule of this table. The other side’s king and queen do not change the target.</div>' +
+      '<h2 class="govuk-heading-m">During the hand</h2>' +
+      details(
         "The deal",
         "<p>Left deals the first hand. The next dealer is the player on the right. Each player receives four cards.</p>" +
-          "<p>Stop the deal if either of these hands has no points:</p>" +
-          "<ul><li>The player to the right of the dealer</li><li>The dealer’s partner</li></ul>" +
+          warn("Stop the deal if the player to the right of the dealer, or the dealer’s partner, has no points in the first four cards.") +
           "<p>The other two players may hold no points. The deal still continues.</p>"
       ) +
-      section(
+      details(
         "The auction",
         "<p>A bid is a whole number from 16 to 28. Each player speaks once. The player to the right of the dealer speaks first. A new bid must be higher than the current bid. The highest bidder chooses trump.</p>" +
           "<p>If all four players pass, the hand ends. The dealer does not have to bid 16.</p>" +
-          "<p>Some tables in Bangladesh use a different auction. After a pass, that player’s partner may bid. A player may match the bid and say “ditto”. The auction ends when one side stops. This table does not use that auction.</p>" +
-          "<p>One bid for each player is also a Bangladesh rule. This table uses that rule.</p>"
+          '<div class="govuk-inset-text">Some tables in Bangladesh use a different auction. After a pass, that player’s partner may bid. A player may match the bid and say “ditto”. The auction ends when one side stops. This table does not use that auction. One bid for each player is the rule here.</div>'
       ) +
-      section(
+      details(
         "Trump",
         "<p>The bidder may name a suit from the first four cards. Or the bidder may call the seventh card.</p>" +
           "<p>The seventh card is the third of the next four cards. The bidder has not seen it. That card becomes trump. It stays face down, outside the hand.</p>" +
           "<p>If the bidder names a suit, each player receives four more cards. The bidder then puts one trump face down. That card stays out of the hand until a player asks.</p>" +
           "<p>Before a player asks, trump has no power. The bidder cannot lead trump. A trump on another suit is only a card of its own suit.</p>" +
-          "<p>Stop a seventh-card deal in either case:</p>" +
-          "<ul><li>The bidder has no other trump that scores points.</li><li>The other side has no trump, or only the seven.</li></ul>"
+          warn("Stop a seventh-card deal if the bidder has no other trump that scores points, or if the other side has no trump, or only the seven.")
       ) +
-      section(
+      details(
         "Double",
         "<p>An opponent may double after the bidder chooses trump, and before the next four cards. A double makes the hand worth 2 pips. The bidding side may then redouble. A redouble makes the hand worth 4 pips. Both sides decide from the first four cards only. With no double, the hand is worth 1 pip.</p>"
       ) +
-      section(
+      details(
         "Asking",
         "<p>Follow the led suit if you have a card of that suit.</p>" +
           "<p>If you have no card of the led suit, choose one:</p>" +
-          "<ul><li>Discard a card from another suit.</li><li>Ask for trump.</li></ul>" +
+          '<ul class="govuk-list govuk-list--bullet"><li>Discard a card from another suit.</li><li>Ask for trump.</li></ul>' +
           "<p>If you ask, the bidder shows the face-down card. That suit is trump for this trick and for the rest of the hand. You must play a trump if you have one. A card of that suit already in the trick can win.</p>" +
-          "<p>At some tables, the first player who cannot follow must ask. That player may then discard. At this table, you choose whether to ask.</p>" +
+          '<div class="govuk-inset-text">At some tables, the first player who cannot follow must ask. That player may then discard. At this table, you choose whether to ask.</div>' +
           "<p>After trump is known, follow the led suit if you can. If you cannot follow, you may play a trump or a discard. If you play a trump and can beat the trump in the trick, you must beat it.</p>" +
-          "<p>If no player asks before the last trick, the hand ends. Neither side scores.</p>"
+          warn("If no player asks before the last trick, the hand ends. Neither side scores.")
       ) +
-      section(
-        "Marriage",
-        "<p>A marriage is the king and queen of trump in one hand. Only the bidding side may show it, after trump is face up.</p>" +
-          "<ul><li>Bid 16, 17, or 18: the target does not change.</li><li>Bid 19 or 20: the target becomes 16.</li><li>Bid 21: the target becomes 17.</li><li>Bid 22 or higher: subtract 4. The target does not go below 16.</li></ul>" +
-          "<p>The Bangladesh note gives the rule for 19, 20, and 21. It does not give a rule for 22 or higher. The rule for 22 or higher is the rule of this table.</p>" +
-          "<p>The other side’s king and queen do not change the target.</p>"
+      details(
+        "Sources",
+        '<p class="govuk-body-s">The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.</p>'
       ) +
-      section(
-        "Pips",
-        "<p>A pip is one point on the match score. Only the bidding side’s score changes.</p>" +
-          "<ul><li>A made contract shows 1 red pip.</li><li>A missed contract shows 1 black pip.</li><li>A double is worth 2 pips.</li><li>A redouble is worth 4 pips.</li></ul>" +
-          "<p>Six red pips win the match. Six black pips lose the match.</p>"
-      ) +
-      '<p class="govuk-body-s colophon">The card points and the marriage numbers follow John McLeod’s notes at pagat.com. Asif Al Hye reported the Bangladesh rules on that page. Shishir Sharif reported the one-bid auction on that page. The card faces are the Standard cardset from PySolFC. John Fitzgibbon and Jochen Tuchbreiter drew that cardset. The table cloth is the Felt Green tile from PySolFC.</p>' +
       "</article>"
-    )
-      .replaceAll("<p>", '<p class="govuk-body">')
-      .replaceAll("<ul>", '<ul class="govuk-list govuk-list--bullet">');
-  }
-
-  function section(title, body) {
-    return '<section><h2 class="govuk-heading-m">' + title + "</h2>" + body + "</section>";
+    ).replaceAll("<p>", '<p class="govuk-body">');
   }
 })();

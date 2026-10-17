@@ -1,10 +1,12 @@
-const CACHE = "twenty-nine-govuk-2";
+const CACHE = "twenty-nine-govuk-7";
 const FILES = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./css/govuk-frontend.min.css",
   "./css/table.css",
+  "./assets/fonts/source-sans-3-latin-400-normal.woff2",
+  "./assets/fonts/source-sans-3-latin-700-normal.woff2",
   "./js/engine.js",
   "./js/bots.js",
   "./js/lessons.js",

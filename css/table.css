@@ -1,7 +1,34 @@
-/* Table geometry only. Chrome comes from GOV.UK Frontend. */
+/* Table geometry only. Chrome comes from GOV.UK Frontend.
+   Source Sans 3 stands in for GDS Transport, which is licensed for gov.uk only. */
+
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/source-sans-3-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/source-sans-3-latin-700-normal.woff2") format("woff2");
+}
+
+:root {
+  --govuk-brand-colour: #0f7a52;
+  --govuk-link-colour: #0b5c3e;
+  --govuk-link-hover-colour: #083d29;
+  --govuk-link-visited-colour: #0b5c3e;
+  --govuk-link-active-colour: #0b0c0c;
+  --govuk-surface-background-colour: #f3f8f6;
+  --govuk-surface-border-colour: #87bca8;
+}
 
 html {
-  font-family: "GDS Transport", arial, sans-serif;
+  font-family: "Source Sans 3", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   background-color: #ffffff;
 }
@@ -13,6 +40,19 @@ body.govuk-template__body {
 
 .govuk-width-container {
   max-width: 1220px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-width-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 }
 
 main.govuk-main-wrapper {
@@ -57,9 +97,9 @@ main.govuk-main-wrapper {
   height: calc(100vh - 168px);
   min-height: 640px;
   overflow: hidden;
-  background-color: #016500;
-  background-image: url("../assets/tiles/Felt_Green.png");
-  border: 1px solid #0b0c0c;
+  background-color: #e6eeea;
+  background-image: linear-gradient(rgba(230, 238, 234, 0.92), rgba(230, 238, 234, 0.92)), url("../assets/tiles/Felt_Green.png");
+  border: 1px solid #b1b4b6;
 }
 
 .rail-felt {
@@ -79,7 +119,7 @@ main.govuk-main-wrapper {
   text-align: center;
   font-size: 1rem;
   line-height: 1.25;
-  color: #ffffff;
+  color: #0b0c0c;
 }
 
 .chaka {
@@ -255,7 +295,7 @@ main.govuk-main-wrapper {
   transform: translate(-50%, -50%);
   font-size: 8rem;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.12);
+  color: rgba(11, 12, 12, 0.12);
   pointer-events: none;
 }
 
@@ -327,7 +367,7 @@ button.card,
 }
 
 .card.trump {
-  box-shadow: 0 0 0 3px #ffffff, 1px 2px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 0 3px #0b0c0c, 1px 2px 0 rgba(0, 0, 0, 0.45);
 }
 
 .card.dim {
@@ -360,21 +400,6 @@ button.card,
 
 .pad .govuk-heading-l {
   margin-bottom: 15px;
-}
-
-.lesson-index {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 15px;
-  list-style: none;
-  margin: 0 0 20px;
-  padding: 0;
-}
-
-.lesson-index a[aria-current="page"] {
-  color: #0b0c0c;
-  font-weight: 700;
-  text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
 }
 
 .choices {
@@ -480,10 +505,6 @@ button.card,
 }
 
 @media (max-width: 900px) {
-  .legend {
-    display: none;
-  }
-
   .layout {
     grid-template-columns: 1fr;
     gap: 20px;
