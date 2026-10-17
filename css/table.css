@@ -595,8 +595,14 @@ button.card,
 }
 
 @media (max-width: 40.0525em) {
+  .govuk-generic-header__container {
+    flex-wrap: wrap;
+  }
+
   .govuk-generic-header .legend {
-    display: none;
+    flex: 1 0 100%;
+    margin: 0 0 10px;
+    white-space: normal;
   }
 
   .mast-end {

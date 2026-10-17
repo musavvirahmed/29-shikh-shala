@@ -28,3 +28,15 @@ test("cards contain their dimming layer so it cannot wash out adjacent cards", (
   assert.ok(cardRule, "expected the shared card rule");
   assert.match(cardRule[1], /isolation:\s*isolate/);
 });
+
+test("the point lookup legend stays visible on mobile", () => {
+  const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
+  const css = fs.readFileSync(path.join(__dirname, "../css/table.css"), "utf8");
+
+  assert.match(html, /class="govuk-body-s legend"/);
+  assert.match(html, /Jack 3, nine 2, ace 1, ten 1, others 0/);
+
+  const mobile = css.match(/@media\s*\(max-width:\s*40\.0525em\)\s*\{([\s\S]*?)\n\}/);
+  assert.ok(mobile, "expected the mobile header media query");
+  assert.doesNotMatch(mobile[1], /\.legend\s*\{[^}]*display:\s*none/);
+});
