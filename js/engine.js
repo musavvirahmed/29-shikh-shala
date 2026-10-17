@@ -135,6 +135,8 @@
       annulReason: null,
       result: null,
       log: [],
+      notes: [],
+      annul: null,
     };
   }
 
@@ -155,9 +157,19 @@
     return SEAT_NAME[seat] + " " + (seat === "S" ? base : third[base]);
   }
 
-  function say(hand, line) {
+  function say(hand, key, line, vars) {
     hand.log.push(line);
     if (hand.log.length > 12) hand.log.shift();
+    hand.notes.push({ key: key, en: line, vars: vars || {} });
+    if (hand.notes.length > 12) hand.notes.shift();
+  }
+
+  function noDoubleLine(seat) {
+    return seat === "S" ? "You do not double." : SEAT_NAME[seat] + " does not double.";
+  }
+
+  function noRedoubleLine(seat) {
+    return seat === "S" ? "You do not redouble." : SEAT_NAME[seat] + " does not redouble.";
   }
 
   function dealCards(hand, deck, start, countEach) {
@@ -181,18 +193,23 @@
       cardPoints(hand.hands[first]) === 0 || cardPoints(hand.hands[second]) === 0;
     if (blank) {
       hand.phase = "annulled";
-      const who =
-        cardPoints(hand.hands[first]) === 0 ? SEAT_NAME[first] : SEAT_NAME[second];
-      hand.annulReason =
-        who +
-        " was dealt four cards with no points. In Bangladesh that deal is thrown in, and the next player deals.";
-      say(hand, "Thrown in. A first hand with no points.");
+      const whoSeat = cardPoints(hand.hands[first]) === 0 ? first : second;
+      hand.annul = {
+        key: "coach.annulBlank",
+        en:
+          SEAT_NAME[whoSeat] +
+          " receives four cards with no points. The deal stops. The next player deals.",
+        vars: { seat: whoSeat },
+      };
+      hand.annulReason = hand.annul.en;
+      say(hand, "log.annulBlank", "The deal stops. The first four cards have no points.");
     } else {
       hand.bidOrder = seatOrder(first);
       hand.bidIndex = 0;
       hand.turnSeat = first;
       hand.phase = "bid";
-      say(hand, SEAT_NAME[first] + " to bid. The floor is 16.");
+      const bidVerb = first === "S" ? "bid" : "bids";
+      say(hand, "log.toBid", SEAT_NAME[first] + " " + bidVerb + " next. The smallest bid is 16.", { seat: first });
     }
     match.hand = hand;
     return hand;
@@ -292,19 +309,19 @@
     return Math.max(16, bid - 4);
   }
 
-  function fail(reason) {
-    return { ok: false, reason };
+  function fail(key, en, vars) {
+    return { ok: false, key: key, vars: vars || {}, reason: en };
   }
 
   function apply(match, action) {
     const hand = match.hand;
-    if (!hand) return fail("No hand is dealt.");
+    if (!hand) return fail("fail.noHand", "No hand is dealt.");
     if (hand.phase === "annulled" || hand.phase === "handEnd" || hand.phase === "matchEnd") {
       if (action.type === "continue") return continueMatch(match);
-      return fail("This hand is over.");
+      return fail("fail.over", "This hand is over.");
     }
     if (action.seat && action.seat !== hand.turnSeat) {
-      return fail("It is not that seat's turn.");
+      return fail("fail.turn", "It is not that seat's turn.");
     }
     const seat = hand.turnSeat;
     if (hand.phase === "bid") return applyBid(hand, seat, action);
@@ -317,25 +334,25 @@
       if (action.type === "reveal") return applyReveal(hand, seat);
       if (action.type === "play") return applyPlay(match, hand, seat, action);
     }
-    return fail("That action does not fit this moment.");
+    return fail("fail.moment", "That action does not fit this moment.");
   }
 
   function applyBid(hand, seat, action) {
     if (action.type === "pass") {
       hand.bids.push({ seat, value: null });
-      say(hand, speaks(seat, "pass") + ".");
+      say(hand, "log.pass", speaks(seat, "pass") + ".", { seat: seat });
     } else if (action.type === "bid") {
       const value = action.value;
       if (!Number.isInteger(value) || value < 16 || value > 28) {
-        return fail("A bid is a whole number from 16 to 28.");
+        return fail("fail.bidRange", "A bid is a whole number from 16 to 28.");
       }
-      if (value <= hand.bid) return fail("The bid has to rise.");
+      if (value <= hand.bid) return fail("fail.bidRise", "The bid has to rise.");
       hand.bid = value;
       hand.declarer = seat;
       hand.bids.push({ seat, value });
-      say(hand, speaks(seat, "bid") + " " + value + ".");
+      say(hand, "log.bid", speaks(seat, "bid") + " " + value + ".", { seat: seat, n: value });
     } else {
-      return fail("Bid or pass.");
+      return fail("fail.bidOrPass", "Bid, or pass.");
     }
     hand.bidIndex += 1;
     if (hand.bidIndex >= 4) return closeAuction(hand);
@@ -347,32 +364,44 @@
     if (!hand.declarer) {
       hand.phase = "annulled";
       hand.turnSeat = null;
-      hand.annulReason =
-        "Everyone passed. At this table the dealer is not forced to bid, so the hand is thrown in.";
-      say(hand, "Thrown in. Nobody bid.");
+      hand.annul = {
+        key: "coach.annulPass",
+        en: "Every player passes. This table does not force the dealer to bid. The deal stops.",
+        vars: {},
+      };
+      hand.annulReason = hand.annul.en;
+      say(hand, "log.annulPass", "The deal stops. Nobody bids.");
       return { ok: true };
     }
     hand.phase = "trump";
     hand.turnSeat = hand.declarer;
-    say(hand, speaks(hand.declarer, "name") + " trump, or " + (hand.declarer === "S" ? "call" : "calls") + " the seventh card.");
+    say(
+      hand,
+      "log.nameOrSeventh",
+      speaks(hand.declarer, "name") + " trump, or " + (hand.declarer === "S" ? "call" : "calls") + " the seventh card.",
+      { seat: hand.declarer }
+    );
     return { ok: true };
   }
 
   function applyTrump(hand, seat, action) {
-    if (action.type !== "trump") return fail("Name a suit, or call the seventh card.");
+    if (action.type !== "trump") return fail("fail.nameOrSeventh", "Name a suit, or call the seventh card.");
     if (action.suit === "7th") {
       hand.trumpMode = "seventh";
       hand.trump = null;
-      say(hand, speaks(seat, "call") + " the seventh card.");
+      say(hand, "log.callSeventh", speaks(seat, "call") + " the seventh card.", { seat: seat });
     } else if (SUITS.includes(action.suit)) {
       if (!hand.hands[seat].some((card) => card.suit === action.suit)) {
-        return fail("You need a card of that suit in these four to name it.");
+        return fail("fail.needSuit", "You need a card of that suit in these four cards to name it.");
       }
       hand.trumpMode = "chosen";
       hand.trump = action.suit;
-      say(hand, speaks(seat, "name") + " " + SUIT_INFO[action.suit].name + ", still face down.");
+      say(hand, "log.nameSuit", speaks(seat, "name") + " " + SUIT_INFO[action.suit].name + ". The suit stays face down.", {
+        seat: seat,
+        suit: action.suit,
+      });
     } else {
-      return fail("That is not a suit.");
+      return fail("fail.notSuit", "That is not a suit.");
     }
     openDoubles(hand);
     return { ok: true };
@@ -386,25 +415,27 @@
     hand.doubleQueue = seatOrder(start).filter((seat) => opponents.includes(seat));
     hand.phase = "double";
     hand.turnSeat = hand.doubleQueue.shift();
-    say(hand, SEAT_NAME[hand.turnSeat] + " may double, before the rest of the cards are dealt.");
+    say(hand, "log.mayDouble", SEAT_NAME[hand.turnSeat] + " may double, before the deal of the other four cards.", {
+      seat: hand.turnSeat,
+    });
   }
 
   function applyDouble(hand, seat, action) {
     if (action.type === "double") {
       hand.stake = 2;
-      say(hand, speaks(seat, "double") + ". The hand is worth two pips.");
+      say(hand, "log.double", speaks(seat, "double") + ". The hand is worth two pips.", { seat: seat });
       const side = [hand.declarer, partner(hand.declarer)];
       hand.redoubleQueue = side;
       hand.phase = "redouble";
       hand.turnSeat = hand.declarer;
-      say(hand, SEAT_NAME[hand.declarer] + " may redouble.");
+      say(hand, "log.mayRedouble", SEAT_NAME[hand.declarer] + " may redouble.", { seat: hand.declarer });
       return { ok: true };
     }
-    if (action.type !== "decline") return fail("Double, or let it stand.");
-    say(hand, speaks(seat, "let") + " it stand.");
+    if (action.type !== "decline") return fail("fail.doubleOrNot", "Double, or do not double.");
+    say(hand, "log.noDouble", noDoubleLine(seat), { seat: seat });
     if (hand.doubleQueue.length) {
       hand.turnSeat = hand.doubleQueue.shift();
-      say(hand, SEAT_NAME[hand.turnSeat] + " may double.");
+      say(hand, "log.mayDoubleAgain", SEAT_NAME[hand.turnSeat] + " may double.", { seat: hand.turnSeat });
       return { ok: true };
     }
     return completeDeal(hand);
@@ -413,16 +444,16 @@
   function applyRedouble(hand, seat, action) {
     if (action.type === "redouble") {
       hand.stake = 4;
-      say(hand, speaks(seat, "redouble") + ". The hand is worth four pips.");
+      say(hand, "log.redouble", speaks(seat, "redouble") + ". The hand is worth four pips.", { seat: seat });
       return completeDeal(hand);
     }
-    if (action.type !== "decline") return fail("Redouble, or let it stand.");
-    say(hand, speaks(seat, "let") + " the double stand.");
+    if (action.type !== "decline") return fail("fail.redoubleOrNot", "Redouble, or do not redouble.");
+    say(hand, "log.noRedouble", noRedoubleLine(seat), { seat: seat });
     const next = hand.redoubleQueue.find((s) => s !== seat);
     hand.redoubleQueue = [];
     if (next && seat === hand.declarer) {
       hand.turnSeat = next;
-      say(hand, SEAT_NAME[next] + " may redouble.");
+      say(hand, "log.mayRedouble", SEAT_NAME[next] + " may redouble.", { seat: next });
       return { ok: true };
     }
     return completeDeal(hand);
@@ -447,21 +478,25 @@
       const own = hand.hands[hand.declarer].filter((card) => card.suit === hand.trump);
       const ownPoints = own.some((card) => POINTS[card.rank] > 0);
       if (!ownPoints) {
-        return annul(
-          hand,
-          "The seventh card is trump, and the bidder has no other scoring trump. The hand is thrown in."
-        );
+        return annul(hand, {
+          key: "coach.annulSeventhOwn",
+          en: "The seventh card is trump. The bidder has no other trump that scores points. The deal stops.",
+          vars: {},
+        });
       }
       const oppTrumps = SEATS.filter((s) => teamOf(s) !== teamOf(hand.declarer)).flatMap((s) =>
         hand.hands[s].filter((card) => card.suit === hand.trump)
       );
       if (oppTrumps.length === 0 || oppTrumps.every((card) => card.rank === "7")) {
-        return annul(
-          hand,
-          "The other side has no trump worth playing against a seventh-card call. The hand is thrown in."
-        );
+        return annul(hand, {
+          key: "coach.annulSeventhOpp",
+          en: "The other side has no trump, or only the seven. The deal stops.",
+          vars: {},
+        });
       }
-      say(hand, "The seventh card is set aside. Only " + SEAT_NAME[hand.declarer] + " has seen it.");
+      say(hand, "log.seventhAside", "The seventh card stays out of the hand. Only " + SEAT_NAME[hand.declarer] + " saw it.", {
+        seat: hand.declarer,
+      });
       return beginPlay(hand, start);
     }
 
@@ -474,19 +509,23 @@
     hand.turnSeat = hand.declarer;
     say(
       hand,
+      "log.slide",
       SEAT_NAME[hand.declarer] +
-        " slides one " +
+        (hand.declarer === "S" ? " place " : " places ") +
+        "one " +
         SUIT_INFO[hand.trump].name.replace(/s$/, "") +
-        " face down."
+        " face down.",
+      { seat: hand.declarer, suit: hand.trump }
     );
     return { ok: true };
   }
 
-  function annul(hand, reason) {
+  function annul(hand, spec) {
     hand.phase = "annulled";
     hand.turnSeat = null;
-    hand.annulReason = reason;
-    say(hand, "Thrown in.");
+    hand.annul = spec;
+    hand.annulReason = spec.en;
+    say(hand, "log.stopped", "The deal stops.");
     return { ok: true };
   }
 
@@ -496,22 +535,22 @@
     hand.turnSeat = leader;
     hand.trick = [];
     hand.trickNo = 1;
-    say(hand, speaks(leader, "lead") + ".");
+    say(hand, "log.lead", speaks(leader, "lead") + ".", { seat: leader });
     return { ok: true };
   }
 
   function applyBury(hand, seat, action) {
-    if (action.type !== "bury") return fail("Choose a trump to place face down.");
+    if (action.type !== "bury") return fail("fail.bury", "Place a trump face down.");
     const card = hand.hands[seat].find((c) => c.id === action.card);
-    if (!card) return fail("That card is not in the hand.");
-    if (card.suit !== hand.trump) return fail("The face-down card has to be a trump.");
+    if (!card) return fail("fail.missing", "That card is not in the hand.");
+    if (card.suit !== hand.trump) return fail("fail.buryTrump", "The face-down card has to be a trump.");
     hand.buried = removeCard(hand, seat, card.id);
-    say(hand, "A trump is face down. It is not in the hand until someone asks.");
+    say(hand, "log.buried", "A trump is face down. It stays out of the hand until a player asks.");
     return beginPlay(hand, nextSeat(hand.dealer));
   }
 
   function applyReveal(hand, seat) {
-    if (!canAsk(hand, seat)) return fail("You can ask only when you cannot follow the led suit.");
+    if (!canAsk(hand, seat)) return fail("fail.askWhen", "You can ask only when you cannot follow the led suit.");
     revealTrump(hand, seat);
     return { ok: true };
   }
@@ -527,22 +566,27 @@
     hand.mustTrump = hasTrump ? seat : null;
     say(
       hand,
+      hand.mustTrump ? "log.askMust" : "log.askNone",
       SEAT_NAME[seat] +
         " asks. Trump is " +
         SUIT_INFO[hand.trump].name +
-        (hand.mustTrump ? ", and a trump has to be played." : ". There is no trump to play.")
+        (hand.mustTrump ? ". A trump has to be played." : ". There is no trump to play."),
+      { seat: seat, suit: hand.trump }
     );
   }
 
   function applyPlay(match, hand, seat, action) {
     const card = hand.hands[seat].find((c) => c.id === action.card);
-    if (!card) return fail("That card is not in the hand.");
+    if (!card) return fail("fail.missing", "That card is not in the hand.");
     const legal = legalPlays(hand, seat);
-    if (!legal.some((play) => play.card.id === card.id)) return fail(illegalReason(hand, seat, card));
+    if (!legal.some((play) => play.card.id === card.id)) {
+      const spec = illegalReason(hand, seat, card);
+      return fail(spec.key, spec.en, spec.vars);
+    }
     removeCard(hand, seat, card.id);
     hand.mustTrump = null;
     hand.trick.push({ seat, card });
-    say(hand, speaks(seat, "play") + " the " + cardLabel(card) + ".");
+    say(hand, "log.play", speaks(seat, "play") + " the " + cardLabel(card) + ".", { seat: seat, card: card.id });
     if (hand.trick.length < 4) {
       hand.turnSeat = nextSeat(seat);
       return { ok: true };
@@ -554,13 +598,14 @@
     if (hand.trick.length) {
       const led = hand.trick[0].card.suit;
       if (hand.hands[seat].some((c) => c.suit === led) && card.suit !== led) {
-        return SUIT_INFO[led].name[0].toUpperCase() + SUIT_INFO[led].name.slice(1) + " were led, and you still have one.";
+        const suitName = SUIT_INFO[led].name[0].toUpperCase() + SUIT_INFO[led].name.slice(1);
+        return { key: "fail.mustFollow", en: suitName + " led. You still hold one of that suit.", vars: { suit: led } };
       }
     } else if (!hand.trumpRevealed && seat === hand.declarer && card.suit === hand.trump) {
-      return "Trump is still hidden, so you cannot lead it.";
+      return { key: "fail.noLeadTrump", en: "Trump is still hidden. You cannot lead a trump.", vars: {} };
     }
     if (hand.mustTrump === seat && card.suit !== hand.trump) {
-      return "You asked for trump, so you have to play one.";
+      return { key: "fail.mustTrump", en: "You asked for trump. You have to play a trump.", vars: {} };
     }
     if (hand.trumpRevealed && hand.trick.length && card.suit === hand.trump) {
       const best = highestTrumpInTrick(hand.trick, hand.trump);
@@ -568,10 +613,10 @@
         const higher = hand.hands[seat].some(
           (c) => c.suit === hand.trump && POWER[c.rank] > POWER[best.rank]
         );
-        if (higher) return "If you trump, you have to beat the trump that is already there.";
+        if (higher) return { key: "fail.beatTrump", en: "You play a trump, so you have to beat the trump in the trick.", vars: {} };
       }
     }
-    return "That card cannot be played on this trick.";
+    return { key: "fail.illegal", en: "You cannot play that card on this trick.", vars: {} };
   }
 
   function resolveTrick(match, hand) {
@@ -580,25 +625,27 @@
     const pile = hand.trick.map((play) => play.card);
     hand.tricks[teamOf(winner.seat)].push(...pile);
     const pts = cardPoints(pile);
-    say(
-      hand,
-      speaks(winner.seat, "take") +
-        " the trick" +
-        (pts ? ", " + pts + " point" + (pts === 1 ? "" : "s") + "." : ", nothing in it.")
-    );
+    say(hand, "log.take", speaks(winner.seat, "take") + " the trick. Card points: " + pts + ".", {
+      seat: winner.seat,
+      n: pts,
+    });
     hand.lastTrick = hand.trick.slice();
     hand.trick = [];
     hand.trickNo += 1;
     hand.leader = winner.seat;
     hand.turnSeat = winner.seat;
     if (hand.trickNo === 8 && !hand.trumpRevealed) {
-      return annul(hand, "Nobody asked for trump before the last trick. The hand is thrown in, and neither side scores.");
+      return annul(hand, {
+        key: "coach.annulNoAsk",
+        en: "Nobody asked for trump before the last trick. The deal stops. Neither side scores.",
+        vars: {},
+      });
     }
     const holder = marriageHolder(hand);
     if (holder) {
       hand.phase = "marriage";
       hand.turnSeat = holder;
-      say(hand, SEAT_NAME[holder] + " may show the king and queen of trump.");
+      say(hand, "log.mayMarriage", SEAT_NAME[holder] + " may show the king and queen of trump.", { seat: holder });
       return { ok: true };
     }
     if (hand.trickNo > 8) return scoreHand(match, hand);
@@ -606,21 +653,23 @@
   }
 
   function applyMarriage(match, hand, seat, action) {
-    if (seat !== marriageHolder(hand)) return fail("Only the hand holding both cards can show them.");
+    if (seat !== marriageHolder(hand)) return fail("fail.marriageWho", "Only the player who holds both cards can show them.");
     if (action.type === "marriage") {
       hand.marriage = true;
       hand.marriageSeat = seat;
       const target = targetOf(hand);
+      const same = target === hand.bid;
       say(
         hand,
-        "Marriage. The target is " +
-          target +
-          (target === hand.bid ? ", unchanged at this bid." : ", down from " + hand.bid + ".")
+        same ? "log.marriageSame" : "log.marriageDown",
+        "Marriage. The target is " + target + (same ? ". This bid does not change." : ". The old bid was " + hand.bid + "."),
+        { target: target, bid: hand.bid }
       );
     } else if (action.type === "decline") {
-      say(hand, speaks(seat, "keep") + " the king and queen hidden.");
+      const line = (seat === "S" ? "You keep" : SEAT_NAME[seat] + " keeps") + " the king and queen hidden.";
+      say(hand, "log.keepMarriage", line, { seat: seat });
     } else {
-      return fail("Show the marriage, or keep it.");
+      return fail("fail.marriageChoice", "Show the marriage, or keep it.");
     }
     if (hand.trickNo > 8) return scoreHand(match, hand);
     hand.phase = "play";
@@ -637,22 +686,23 @@
     match.scores[side] += delta;
     match.handsPlayed += 1;
     hand.result = { side, got, target, made, delta, defend: cardPoints(hand.tricks[otherTeam(side)]) };
-    const name = side === "SN" ? "You and Partner" : "Left and Right";
+    const us = side === "SN";
+    const name = us ? "You and Partner" : "Left and Right";
+    const deltaText = (delta > 0 ? "+" : "") + delta;
     say(
       hand,
+      "log.score." + (us ? "us" : "them") + "." + (made ? "made" : "miss"),
       name +
         " took " +
         got +
-        " against " +
+        " card points. The target was " +
         target +
         ". " +
-        (made ? "Made." : "Failed.") +
-        " " +
-        (delta > 0 ? "+" : "") +
-        delta +
-        " pip" +
-        (Math.abs(delta) === 1 ? "" : "s") +
-        "."
+        (made ? "The contract stands." : "The contract fails.") +
+        " Pips: " +
+        deltaText +
+        ".",
+      { got: got, target: target, delta: deltaText }
     );
     hand.phase = "handEnd";
     hand.turnSeat = null;
@@ -750,91 +800,153 @@
     };
   }
 
-  function coachLine(match, viewer) {
+  function coachSpec(match, viewer) {
     const hand = match.hand;
-    if (!hand) return "Deal a hand. You sit at the bottom. Partner is across. Play runs to your right.";
-    if (hand.phase === "annulled") return hand.annulReason;
+    if (!hand) {
+      return {
+        key: "coach.welcome",
+        en: "Deal a hand. You sit at the bottom. Partner sits across. Play runs to your right.",
+        vars: {},
+      };
+    }
+    if (hand.phase === "annulled") {
+      return hand.annul || { key: "coach.stopped", en: hand.annulReason || "The deal stops.", vars: {} };
+    }
     if (hand.phase === "matchEnd") {
       const won = match.over.winner === teamOf(viewer);
       return won
-        ? "Six pips. You and Partner take the match."
-        : "The other side has six pips. The match is theirs.";
+        ? { key: "coach.matchWin", en: "Six pips. You and Partner take the match.", vars: {} }
+        : { key: "coach.matchLoss", en: "The other side has six pips. The match is theirs.", vars: {} };
     }
     if (hand.phase === "handEnd") {
       const r = hand.result;
       const biddingUs = teamOf(hand.declarer) === teamOf(viewer);
-      return (
-        (biddingUs ? "Your side" : "Their side") +
-        " took " +
-        r.got +
-        " card points. The target was " +
-        r.target +
-        ". " +
-        (r.made ? "The contract stands." : "The contract fails.") +
-        " Only the bidding side's pips move."
-      );
+      return {
+        key: "coach.handEnd." + (biddingUs ? "us" : "them") + "." + (r.made ? "made" : "miss"),
+        en:
+          (biddingUs ? "Your side" : "The other side") +
+          " took " +
+          r.got +
+          " card points. The target was " +
+          r.target +
+          ". " +
+          (r.made ? "The contract stands." : "The contract fails.") +
+          " Only the pips of the bidding side move.",
+        vars: { got: r.got, target: r.target },
+      };
     }
     if (hand.turnSeat !== viewer) {
-      return SEAT_NAME[hand.turnSeat] + " is thinking.";
+      return { key: "coach.thinking", en: SEAT_NAME[hand.turnSeat] + " is thinking.", vars: { seat: hand.turnSeat } };
     }
     if (hand.phase === "bid") {
       const pts = cardPoints(hand.hands[viewer]);
       const high = hand.bid ? "The bid is " + hand.bid + ". " : "";
-      return (
-        high +
-        "Your four cards are worth " +
-        pts +
-        " point" +
-        (pts === 1 ? "" : "s") +
-        ". A bid is a promise that your side will take at least that many of the 28."
-      );
+      return {
+        key: hand.bid ? "coach.bidHigh" : "coach.bidOpen",
+        en:
+          high +
+          "Your four cards have " +
+          pts +
+          " card points. A bid promises that your side will take at least that many of the 28.",
+        vars: { bid: hand.bid || 0, pts: pts },
+      };
     }
     if (hand.phase === "trump") {
-      return "Name the suit you want as trump, from these four cards. Or call the seventh card if no suit is worth owning. You will not show it yet.";
+      return {
+        key: "coach.trump",
+        en: "Name a trump suit from these four cards. Or call the seventh card if you do not want one of these suits. You do not show the suit yet.",
+        vars: {},
+      };
     }
     if (hand.phase === "double") {
-      return "You may double before the other four cards are dealt. A double makes the hand worth two pips, won or lost. You are guessing from four cards.";
+      return {
+        key: "coach.double",
+        en: "You may double before the deal of the other four cards. A double makes the hand worth two pips. You win two pips, or you lose two pips. You know only these four cards.",
+        vars: {},
+      };
     }
     if (hand.phase === "redouble") {
-      return "They doubled. A redouble makes the hand worth four pips. You still have not seen your other four cards.";
+      return {
+        key: "coach.redouble",
+        en: "The other side doubled. A redouble makes the hand worth four pips. You do not see your other four cards yet.",
+        vars: {},
+      };
     }
     if (hand.phase === "bury") {
-      return (
-        "Slide one " +
-        SUIT_INFO[hand.trump].name.replace(/s$/, "") +
-        " face down. It leaves your hand until someone asks. Players usually bury a low trump and keep the jack."
-      );
+      const suitName = SUIT_INFO[hand.trump].name.replace(/s$/, "");
+      return {
+        key: "coach.bury",
+        en: "Place one " + suitName + " face down. It leaves your hand until a player asks. A low trump is the usual choice. Keep the jack.",
+        vars: { suit: hand.trump },
+      };
     }
     if (hand.phase === "marriage") {
       const next = targetOf({ bid: hand.bid, marriage: true });
       if (next === hand.bid) {
-        return "You hold the king and queen of trump. The bid is " + hand.bid + ", so showing them does not lower the target. Bids of 16, 17 and 18 get no help.";
+        return {
+          key: "coach.marriageSame",
+          en: "You hold the king and queen of trump. The bid is " + hand.bid + ". A show does not lower the target. Bids of 16, 17, and 18 get no help.",
+          vars: { bid: hand.bid },
+        };
       }
-      return "You hold the king and queen of trump. Show them and the target falls from " + hand.bid + " to " + next + ".";
+      return {
+        key: "coach.marriageDown",
+        en: "You hold the king and queen of trump. Show them and the target falls from " + hand.bid + " to " + next + ".",
+        vars: { bid: hand.bid, target: next },
+      };
     }
     if (canAsk(hand, viewer)) {
       const partnerWinning = currentWinner(hand) === partner(viewer);
       if (partnerWinning) {
-        return "You cannot follow. Partner is winning this trick. Asking would name trump and force you to spend one if you have it. A quiet discard leaves the trick where it is.";
+        return {
+          key: "coach.askNo",
+          en: "You cannot follow the led suit. Partner is winning this trick. An ask names trump. You then play a trump if you hold one. A discard leaves the trick with Partner.",
+          vars: {},
+        };
       }
-      return "You cannot follow, and partner is not winning. Ask if you are willing to name the suit and play a trump. Or discard, and leave the suit hidden.";
+      return {
+        key: "coach.askYes",
+        en: "You cannot follow the led suit. Partner is not winning. Ask if you will name the suit and play a trump. Or discard, and leave the suit hidden.",
+        vars: {},
+      };
     }
     if (hand.mustTrump === viewer) {
-      return "Trump is " + SUIT_INFO[hand.trump].name + ". You asked, so you play a trump. If one is already winning, you have to beat it when you can.";
+      return {
+        key: "coach.mustTrump",
+        en: "Trump is " + SUIT_INFO[hand.trump].name + ". You asked, so you play a trump. If a trump is already winning, you beat it when you can.",
+        vars: { suit: hand.trump },
+      };
     }
     if (!hand.trick.length && !hand.trumpRevealed && viewer === hand.declarer) {
-      return "You lead. Trump is still hidden, so you cannot start with one. A low card in a side suit is the ordinary opening.";
+      return {
+        key: "coach.leadHiddenDeclarer",
+        en: "You lead. Trump is still hidden, so you cannot start with a trump. A low card in another suit is the ordinary opening.",
+        vars: {},
+      };
     }
     if (!hand.trick.length) {
       return hand.trumpRevealed
-        ? "You lead. Trump is " + SUIT_INFO[hand.trump].name + "."
-        : "You lead. Trump is still hidden, so the highest card of the suit you start will win unless someone later asks on this trick.";
+        ? { key: "coach.leadOpen", en: "You lead. Trump is " + SUIT_INFO[hand.trump].name + ".", vars: { suit: hand.trump } }
+        : {
+            key: "coach.leadHidden",
+            en: "You lead. Trump is still hidden. The highest card of the suit you start wins, unless a player asks on this trick.",
+            vars: {},
+          };
     }
     const led = hand.trick[0].card.suit;
     if (hand.hands[viewer].some((card) => card.suit === led)) {
-      return SUIT_INFO[led].name[0].toUpperCase() + SUIT_INFO[led].name.slice(1) + " were led. You follow. Higher card of the led suit wins, unless trump is already revealed and someone plays one.";
+      const suitName = SUIT_INFO[led].name[0].toUpperCase() + SUIT_INFO[led].name.slice(1);
+      return {
+        key: "coach.follow",
+        en: suitName + " led. You follow that suit. The higher card of that suit wins, unless trump is face up and a player plays one.",
+        vars: { suit: led },
+      };
     }
-    return "Your turn.";
+    return { key: "coach.yourTurn", en: "Your turn.", vars: {} };
+  }
+
+  function coachLine(match, viewer) {
+    return coachSpec(match, viewer).en;
   }
 
   function currentWinner(hand) {
@@ -901,6 +1013,7 @@
     targetOf,
     present,
     coachLine,
+    coachSpec,
     currentWinner,
     loadPosition,
     winningPlay,

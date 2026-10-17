@@ -1,170 +1,225 @@
-/* Table geometry only. Chrome comes from GOV.UK Frontend.
-   Source Sans 3 stands in for GDS Transport, which is licensed for gov.uk only. */
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../assets/fonts/source-sans-3-latin-400-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../assets/fonts/source-sans-3-latin-700-normal.woff2") format("woff2");
-}
-
 :root {
-  --govuk-brand-colour: #0f7a52;
-  --govuk-link-colour: #0b5c3e;
-  --govuk-link-hover-colour: #083d29;
-  --govuk-link-visited-colour: #0b5c3e;
-  --govuk-link-active-colour: #0b0c0c;
-  --govuk-surface-background-colour: #f3f8f6;
-  --govuk-surface-border-colour: #87bca8;
+  --ink: #111111;
+  --cream: #ffffff;
+  --pad: #d4d0c8;
+  --pad-hi: #ffffff;
+  --pad-lo: #404040;
+  --rule: #808080;
+  --red: #c00000;
+  --gold: #ffe14a;
+  --felt: #016500;
+  --bar: #d4d0c8;
+  --card-w: 90px;
+  --card-h: 122px;
+  --text: 18px;
+  --text-ui: 16px;
+  --text-meta: 14px;
+  --text-title: 26px;
+  color-scheme: light;
 }
 
-html {
-  font-family: "Source Sans 3", arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  background-color: #ffffff;
-}
+* { box-sizing: border-box; }
 
-body.govuk-template__body {
+body {
+  margin: 0;
   min-height: 100vh;
-  background-color: #ffffff;
+  color: #f4f4f4;
+  font-family: Verdana, Tahoma, "Microsoft Sans Serif", "Liberation Sans", sans-serif;
+  font-size: var(--text);
+  line-height: 1.45;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: optimizeSpeed;
+  background-color: var(--felt);
+  background-image: url("../assets/tiles/Felt_Green.png");
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
-.govuk-width-container {
-  max-width: 1220px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-}
+button, input { font: inherit; }
 
-@media (min-width: 40.0625em) {
-  .govuk-width-container {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-}
+.desk { min-height: 100vh; }
 
-main.govuk-main-wrapper {
-  padding-top: 20px;
-  padding-bottom: 30px;
-}
-
-.mast-end {
+.mast {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin: 10px 0 10px auto;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  padding: 6px 10px;
+  color: var(--ink);
+  background: var(--bar);
+  border-bottom: 2px solid var(--pad-lo);
+  box-shadow: inset 0 1px 0 var(--pad-hi);
+}
+
+.wordmark {
+  margin: 0;
+  line-height: 0;
+}
+
+.wordmark img {
+  display: block;
+  height: 52px;
+  width: auto;
+}
+
+#nav, .langs { display: flex; gap: 4px; align-items: center; }
+
+.langs { margin: 0; }
+
+.ip-country {
+  margin: 0 0 0 6px;
+  color: #333;
+  font-size: var(--text-meta);
+}
+
+html[lang="bn"] body {
+  font-family: "Bangla Sangam MN", "Noto Sans Bengali", "Nirmala UI", "Kohinoor Bangla", Verdana, sans-serif;
+  line-height: 1.7;
+}
+
+html[lang="bn"] .legend span {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+#nav button, #install, .langs button {
+  background: var(--bar);
+  border: 2px solid var(--pad-hi);
+  border-right-color: var(--pad-lo);
+  border-bottom-color: var(--pad-lo);
+  color: var(--ink);
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: var(--text-ui);
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+#nav button[aria-current="page"], .langs button[aria-current="true"] {
+  color: var(--ink);
+  background: #ffffff;
+  border-color: var(--pad-lo);
+  border-right-color: var(--pad-hi);
+  border-bottom-color: var(--pad-hi);
 }
 
 .legend {
-  margin: 0;
-  color: var(--govuk-secondary-text-colour, #484949);
+  margin: 0 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  color: var(--ink);
+  font-size: var(--text-ui);
+  letter-spacing: 0;
+}
+
+.legend span {
+  color: #333;
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+#install {
+  border-radius: 0;
+  letter-spacing: 0;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22.5rem;
-  gap: 30px;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 10px;
+  padding: 8px;
   align-items: start;
 }
 
 .layout.rules-mode {
-  grid-template-columns: minmax(0, 42rem);
+  grid-template-columns: minmax(0, 740px);
+  justify-content: center;
 }
 
-.layout.rules-mode #pad {
-  display: none;
-}
+.layout.rules-mode #pad { display: none; }
 
 .felt {
-  position: relative;
-  min-height: 0;
+  min-height: 680px;
+  height: calc(100vh - 72px);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .baize {
   position: relative;
-  height: calc(100vh - 168px);
+  height: 100%;
   min-height: 640px;
+  border-radius: 0;
   overflow: hidden;
-  background-color: #e6eeea;
-  background-image: linear-gradient(rgba(230, 238, 234, 0.92), rgba(230, 238, 234, 0.92)), url("../assets/tiles/Felt_Green.png");
-  border: 1px solid #b1b4b6;
+  background-color: var(--felt);
+  background-image: url("../assets/tiles/Felt_Green.png");
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
 }
 
 .rail-felt {
   position: absolute;
   z-index: 5;
-  top: 15px;
-  left: 15px;
-  right: 15px;
+  top: 12px;
+  left: 14px;
+  right: 14px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 15px;
+  gap: 12px;
   align-items: center;
 }
 
 .ribbon {
   margin: 0;
   text-align: center;
-  font-size: 1rem;
-  line-height: 1.25;
-  color: #0b0c0c;
+  font-size: var(--text);
+  line-height: 1.35;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #000;
 }
 
 .chaka {
-  min-width: 4.5rem;
-  background: #ffffff;
-  color: #0b0c0c;
-  border: 1px solid #0b0c0c;
+  width: 72px;
+  height: 92px;
+  background: var(--cream);
+  color: var(--ink);
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px 10px;
+  justify-content: space-between;
+  padding: 6px 0 8px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
 }
 
 .chaka span {
-  font-size: 1rem;
-  line-height: 1.25;
-  font-weight: 700;
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .chaka .dots {
   display: grid;
-  grid-template-columns: 8px 8px;
-  gap: 5px 7px;
+  grid-template-columns: 10px 10px;
+  gap: 6px 8px;
+  width: auto;
   margin: 0;
   padding: 0;
 }
 
 .chaka .dots i {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: inset 0 0 0 1px #0b0c0c;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.28);
 }
 
-.chaka .dots i.red {
-  background: #ca3535;
-  box-shadow: none;
-}
-
-.chaka .dots i.black {
-  background: #0b0c0c;
-  box-shadow: none;
-}
+.chaka .dots i.red { background: var(--red); box-shadow: none; }
+.chaka .dots i.black { background: #1a1612; box-shadow: none; }
 
 .seat {
   position: absolute;
@@ -172,119 +227,66 @@ main.govuk-main-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .seat.north {
-  top: 132px;
+  top: 108px;
   left: 50%;
   transform: translateX(-50%);
   flex-direction: column-reverse;
 }
-
-.seat.south {
-  bottom: 10px;
-  left: 50%;
-  width: min(720px, 94%);
-  transform: translateX(-50%);
-}
-
-.seat.west {
-  left: 15px;
-  top: 54%;
-  transform: translateY(-50%);
-}
-
-.seat.east {
-  right: 15px;
-  top: 54%;
-  transform: translateY(-50%);
-}
+.seat.south { bottom: 8px; left: 50%; width: min(720px, 94%); transform: translateX(-50%); }
+.seat.west { left: 16px; top: 54%; transform: translateY(-50%); }
+.seat.east { right: 16px; top: 54%; transform: translateY(-50%); }
 
 .seat-name {
   margin: 0;
   display: flex;
   gap: 8px;
   align-items: baseline;
-  padding: 2px 8px;
-  font-size: 1rem;
-  line-height: 1.25;
+  font-size: var(--text-ui);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   color: #ffffff;
-  background: #0b0c0c;
+  text-shadow: 1px 1px 0 #000;
 }
 
 .seat-name em {
   font-style: normal;
-  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0;
 }
 
-.fan {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
+.seat.hot .seat-name span { color: white; }
 
-.seat.south .fan .card + .card {
-  margin-left: -22px;
-}
+.fan { display: flex; justify-content: center; align-items: flex-end; }
 
-.seat.north .fan .card + .card {
-  margin-left: -46px;
-}
+.seat.south .fan .card + .card { margin-left: -16px; }
+.seat.north .fan .card + .card { margin-left: -58px; }
 
 .seat.west .fan,
-.seat.east .fan {
-  flex-direction: column;
-  align-items: center;
-}
+.seat.east .fan { flex-direction: column; align-items: center; }
 
 .seat.west .card + .card,
-.seat.east .card + .card {
-  margin-top: -74px;
-}
+.seat.east .card + .card { margin-top: -96px; }
 
 .trick {
   position: absolute;
   z-index: 3;
   left: 50%;
   top: 52%;
-  width: 250px;
-  height: 250px;
+  width: 280px;
+  height: 280px;
   transform: translate(-50%, -50%);
 }
 
-.trick-slot {
-  position: absolute;
-}
-
-.trick-slot.north {
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.trick-slot.south {
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.trick-slot.west {
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.trick-slot.east {
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.trick-slot .card {
-  width: 71px;
-  height: 96px;
-}
+.trick-slot { position: absolute; }
+.trick-slot.north { top: 0; left: 50%; transform: translateX(-50%); }
+.trick-slot.south { bottom: 0; left: 50%; transform: translateX(-50%); }
+.trick-slot.west { left: 0; top: 50%; transform: translateY(-50%); }
+.trick-slot.east { right: 0; top: 50%; transform: translateY(-50%); }
+.trick-slot .card { width: var(--card-w); height: var(--card-h); }
 
 .trump-mark {
   position: absolute;
@@ -293,9 +295,9 @@ main.govuk-main-wrapper {
   top: 48%;
   margin: 0;
   transform: translate(-50%, -50%);
-  font-size: 8rem;
+  font-size: 140px;
   line-height: 1;
-  color: rgba(11, 12, 12, 0.12);
+  color: rgba(255, 255, 255, 0.07);
   pointer-events: none;
 }
 
@@ -305,277 +307,247 @@ main.govuk-main-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
 }
 
-.buried .card {
-  width: 71px;
-  height: 96px;
-}
-
+.buried .card { width: var(--card-w); height: var(--card-h); }
 .buried em {
   font-style: normal;
-  font-size: 1rem;
-  line-height: 1.25;
-  color: #ffffff;
-  background: #0b0c0c;
-  padding: 2px 8px;
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 1px 1px 0 #000;
 }
 
-.buried.for-S {
-  left: 4%;
-  bottom: 118px;
-}
+.buried.for-S { left: 4%; bottom: 168px; }
+.buried.for-N { left: 14%; top: 168px; }
+.buried.for-E { right: 112px; top: 30%; }
+.buried.for-W { left: 112px; top: 30%; }
 
-.buried.for-N {
-  left: 14%;
-  top: 160px;
-}
-
-.buried.for-E {
-  right: 92px;
-  top: 30%;
-}
-
-.buried.for-W {
-  left: 92px;
-  top: 30%;
-}
-
-button.card,
-.card {
+button.card, .card {
   position: relative;
   display: inline-block;
-  width: 71px;
-  height: 96px;
+  width: var(--card-w);
+  height: var(--card-h);
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: transparent;
+  /* Opaque face under GIF alpha corners so hard box-shadow stays crisp (no filter spurs). */
+  background: #ffffff;
   line-height: 0;
-  box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
   cursor: default;
 }
 
 .card img {
   display: block;
-  width: 71px;
-  height: 96px;
+  width: var(--card-w);
+  height: var(--card-h);
   pointer-events: none;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
 .card.trump {
-  box-shadow: 0 0 0 3px #0b0c0c, 1px 2px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 0 3px var(--gold), 2px 2px 0 rgba(0, 0, 0, 0.55);
 }
 
-.card.dim {
-  opacity: 0.45;
-}
+.card.dim { opacity: 0.45; filter: saturate(0.35); }
+.card.playable { cursor: pointer; }
 
-.card.playable {
-  cursor: pointer;
-}
-
-.seat.south .card.playable:hover {
-  transform: translateY(-8px);
+.seat.south .card.playable:hover,
+.seat.south .card.playable:focus-visible {
+  transform: translateY(-10px);
   z-index: 3;
 }
 
-.trick-slot .card {
-  animation: lay 220ms ease;
-}
+.trick-slot .card { animation: lay 220ms ease; }
 
 @keyframes lay {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to { opacity: 1; transform: none; }
 }
 
-.pad .govuk-heading-l {
-  margin-bottom: 15px;
+.pad {
+  position: relative;
+  min-height: 680px;
+  height: calc(100vh - 72px);
+  overflow: auto;
+  padding: 16px 16px 18px;
+  color: var(--ink);
+  background: var(--pad);
+  border: 2px solid var(--pad-hi);
+  border-right-color: var(--pad-lo);
+  border-bottom-color: var(--pad-lo);
+  box-shadow: 1px 1px 0 #808080;
 }
 
-.choices {
+.kicker {
+  margin: 0 0 6px;
+  font-size: var(--text-meta);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.pad h2, .rules h2 {
+  margin: 0 0 10px;
+  font-weight: 700;
+  font-size: var(--text-title);
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.coach, .why, .hint, .rules p, .log {
+  font-size: var(--text);
+  line-height: 1.5;
+}
+
+.coach { margin: 10px 0 0; }
+
+.why {
+  margin: 0 0 8px;
+  padding-top: 4px;
+  color: #163816;
+}
+
+.hint {
+  flex: 1 0 100%;
+  margin: 0;
+  color: #333;
+}
+
+.flash {
+  margin: 8px 0 0;
+  color: #8c1d1d;
+}
+
+.choices, .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  align-items: flex-start;
-  margin: 0 0 20px;
+  gap: 8px;
+  margin: 14px 0;
 }
 
-.choices .govuk-button {
-  margin-bottom: 0;
-}
-
-.choices .choice {
-  width: 100%;
+.choices button, .row button, .choice {
+  border: 2px solid var(--pad-hi);
+  border-right-color: var(--pad-lo);
+  border-bottom-color: var(--pad-lo);
+  background: var(--pad);
+  color: var(--ink);
+  border-radius: 0;
+  font-size: var(--text-ui);
+  padding: 6px 12px;
   text-align: left;
+  cursor: pointer;
 }
 
-.choices .choice.right,
-.choices .choice.right:hover {
-  background-color: #cfe4dc;
-  box-shadow: 0 2px 0 #0f7a52;
-  color: #0b0c0c;
+.choices button.primary, .row button.primary {
+  font-weight: 700;
 }
 
-.choices .choice.wrong,
-.choices .choice.wrong:hover {
-  background-color: #f4d7d7;
-  box-shadow: 0 2px 0 #ca3535;
-  color: #0b0c0c;
+.choice.right { background: #c8e6c4; }
+.choice.wrong { background: #f0c8c4; }
+
+.lesson-dots {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
 }
 
-.choices .govuk-body {
-  flex: 1 0 100%;
-  margin-bottom: 0;
+.lesson-dots button {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #333;
+  background: transparent;
+  cursor: pointer;
 }
 
-.pad .govuk-checkboxes {
-  margin-bottom: 20px;
+.lesson-dots button.on { background: var(--ink); }
+.lesson-dots button.done { background: #666; }
+
+.quiet {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 15px;
+  color: #333;
 }
 
 .log {
-  margin-bottom: 0;
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  color: #333;
+}
+
+.log li {
+  padding: 4px 0;
+  border-top: 1px solid #b0b0b0;
 }
 
 .felt.paper {
   height: auto;
+  min-height: 0;
+  padding: 22px 26px 32px;
+  color: var(--ink);
+  background: #ece9d8;
+  border: 2px solid var(--pad-hi);
+  border-right-color: var(--pad-lo);
+  border-bottom-color: var(--pad-lo);
+  border-radius: 0;
 }
 
-.rules .govuk-heading-l {
-  margin-bottom: 20px;
+.felt { position: relative; }
+
+.rules h3 {
+  margin: 0 0 6px;
+  font-weight: 700;
+  font-size: 20px;
 }
 
-.rules section {
-  margin-top: 30px;
+.rules section { margin-top: 22px; }
+.rules p { margin: 0 0 8px; }
+.rules ul {
+  margin: 4px 0 12px;
+  padding-left: 1.15rem;
+}
+.rules li {
+  margin: 0 0 4px;
+  font-size: var(--text);
+  line-height: 1.5;
+}
+.colophon { margin-top: 28px; color: #333; font-size: 15px; line-height: 1.5; }
+
+button:focus-visible, .card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
 }
 
-.colophon {
-  margin-top: 40px;
-  color: var(--govuk-secondary-text-colour, #484949);
-}
-
-.card:focus-visible {
-  outline: 3px solid #ffdd00;
-  outline-offset: 0;
-  z-index: 4;
-}
-
-@media (max-width: 40.0525em) {
-  .govuk-service-navigation__service-name {
-    margin-right: 15px;
-  }
-
-  .govuk-service-navigation__container {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .govuk-service-navigation__list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .govuk-service-navigation__item {
-    margin: 0;
-    padding: 10px 0;
-    border-left-width: 0;
-  }
-
-  .govuk-service-navigation__item:not(:last-child) {
-    margin-right: 15px;
-  }
-
-  .govuk-service-navigation__item--active {
-    margin-left: 0;
-    padding-left: 0;
-    padding-bottom: 5px;
-    border-bottom-width: 5px;
-    border-left-width: 0;
-  }
-}
-
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .baize {
-    height: 560px;
-    min-height: 560px;
-  }
-
-  .rail-felt {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .ribbon {
-    flex: 1 0 100%;
-    order: -1;
-    margin-bottom: 8px;
-  }
-
-  button.card,
-  .card,
-  .card img,
-  .trick-slot .card,
-  .buried .card {
-    width: 52px;
-    height: 72px;
-  }
-
-  .seat.north {
-    top: 118px;
-    flex-direction: column-reverse;
-  }
-
-  .seat.west,
-  .seat.east {
-    top: 56%;
-  }
-
+@media (max-width: 980px) {
+  .legend { display: none; }
+  .mast { gap: 8px; }
+  .layout { grid-template-columns: 1fr; }
+  .felt, .pad { height: auto; }
+  .felt { min-height: 0; }
+  .baize { height: 620px; min-height: 620px; }
+  .choices button, .row button, .choice { padding: 8px 12px; }
+  .seat.north { top: 104px; flex-direction: column; }
+  .pad { padding: 14px; min-height: 0; }
   .seat.west .card + .card,
-  .seat.east .card + .card {
-    margin-top: -56px;
-  }
-
-  .seat.south .fan .card + .card {
-    margin-left: -24px;
-  }
-
-  .seat.north .fan .card + .card {
-    margin-left: -34px;
-  }
-
-  .buried.for-S {
-    bottom: 96px;
-  }
-
-  .trick {
-    width: 180px;
-    height: 180px;
-  }
+  .seat.east .card + .card { margin-top: -100px; }
+  .seat.south .fan .card + .card { margin-left: -40px; }
+  .seat.north .fan .card + .card { margin-left: -62px; }
+  .buried.for-S { bottom: 156px; }
+  .trick { width: 230px; height: 230px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .trick-slot .card {
-    animation: none;
-  }
-
-  .seat.south .card.playable:hover {
-    transform: none;
-  }
+  .trick-slot .card { animation: none; }
+  .seat.south .card.playable:hover { transform: none; }
 }

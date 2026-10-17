@@ -12,6 +12,17 @@
   const RANKS = { J: "jack", 9: "nine", A: "ace", 10: "ten", K: "king", Q: "queen", 8: "eight", 7: "seven" };
   const RANK_FILE = { A: "01", 7: "07", 8: "08", 9: "09", 10: "10", J: "11", Q: "12", K: "13" };
 
+  function tx(key, fallback, vars) {
+    const i18n = typeof self !== "undefined" ? self.UnotrishI18n : null;
+    if (!i18n) return fallback;
+    return i18n.t(key, fallback, vars);
+  }
+
+  function seatLabel(text) {
+    const key = { You: "seat.you", Right: "seat.right", Partner: "seat.partner", Left: "seat.left", Them: "seat.them" }[text];
+    return key ? tx(key, text) : text;
+  }
+
   function esc(value) {
     return String(value == null ? "" : value).replace(/[&<>"]/g, (ch) => ({
       "&": "&amp;",
@@ -31,7 +42,9 @@
     if (opts.trump) classes.push("trump");
     if (opts.playable) classes.push("playable");
     if (opts.dim) classes.push("dim");
-    const label = RANKS[card.rank] + " of " + suit.name;
+    const label = tx("suit." + card.suit, suit.name) === suit.name && tx("rank." + card.rank, RANKS[card.rank]) === RANKS[card.rank]
+      ? RANKS[card.rank] + " of " + suit.name
+      : tx("suit." + card.suit, suit.name) + "ের " + tx("rank." + card.rank, RANKS[card.rank]);
     const file = "assets/cards/" + RANK_FILE[card.rank] + suit.file + ".gif";
     return (
       '<button type="button" class="' +
@@ -56,8 +69,8 @@
   function seatHTML(seat, view, opts) {
     const hot = view.turn === seat.id ? " hot" : "";
     const tags = [];
-    if (view.dealer === seat.id) tags.push("dealer");
-    if (view.declarer === seat.id && view.bid) tags.push("bid " + view.bid);
+    if (view.dealer === seat.id) tags.push(tx("tag.dealer", "dealer"));
+    if (view.declarer === seat.id && view.bid) tags.push(tx("tag.bid", "bid " + view.bid, { n: view.bid }));
     return (
       '<section class="seat ' +
       seatName(seat.id) +
@@ -71,7 +84,7 @@
         }),
       }) +
       '<p class="seat-name"><span>' +
-      esc(seat.label) +
+      esc(seatLabel(seat.label)) +
       "</span>" +
       (tags.length ? "<em>" + esc(tags.join(" · ")) + "</em>" : "") +
       "</p></section>"
@@ -114,7 +127,7 @@
       '">' +
       cardHTML(view.buried.face ? view.buried : { face: false }, {}) +
       "<em>" +
-      (view.buried.face ? "your hidden card" : "hidden trump") +
+      tx(view.buried.face ? "buried.yours" : "buried.hidden", view.buried.face ? "your hidden card" : "hidden trump") +
       "</em></div>"
     );
   }
@@ -128,11 +141,11 @@
       '<div class="chaka ' +
       kind +
       '" aria-label="' +
-      esc(label) +
+      esc(seatLabel(label)) +
       " " +
       n +
       '"><span>' +
-      esc(label) +
+      esc(seatLabel(label)) +
       '</span><b class="dots">' +
       dots +
       "</b></div>"

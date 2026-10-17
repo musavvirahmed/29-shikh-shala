@@ -1,7 +1,7 @@
 {
-  "name": "Twenty-nine",
-  "short_name": "29",
-  "description": "A PySol-style table that teaches the Bangladeshi card game 29.",
+  "name": "29 শিখ শালা!",
+  "short_name": "29 শিখ শালা!",
+  "description": "A table that teaches the card game 29.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
