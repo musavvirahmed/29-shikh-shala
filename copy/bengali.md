@@ -200,10 +200,6 @@ id: play.log
 en: This hand
 bn: এই হাত
 
-id: play.quiet
-en: Short notes
-bn: ছোট নোট
-
 id: play.continue
 en: Deal the next hand
 bn: পরের হাত ভাগ করুন
@@ -751,47 +747,47 @@ bn: আপনার পালা।
 # Lesson 1. Across is yours
 
 id: lesson.seats.title
-en: Across is yours
-bn: সামনের আসন আপনার সঙ্গী
+en: How the play rotates
+bn: খেলা কিভাবে ঘোরে
 
 id: lesson.seats.0.ribbon
-en: You, then Right, then Partner, then Left
-bn: আপনি, তারপর ডান, তারপর সঙ্গী, তারপর বাঁ
+en: Who plays after you?
+bn: আপনার পরে কে খেলবে?
 
 id: lesson.seats.0.coach
-en: Four seats, two sides. Partner sits across the felt. Left and Right play against you. Left dealt, so you lead. Play runs to your right.
-bn: সর্বমোট চার জন খেলোয়াড়, দুইটা দলে বিভক্ত। আপনার সঙ্গী আপনার উল্টা দিকে বসা। বাম ও ডান দিকে বসা বিপরীত দল। বাঁ বাটেছেন, তাই আপনি প্রথম খেলেন। খেলা আপনার ডানে যায়।
+en: Four players sit in two teams. Your partner sits across from you. Left and Right are the other side. Person on the ;eft dealt, then you played first. Who plays after you?
+bn: সর্বমোট চার জন খেলোয়াড়, দুইটা দলে বিভক্ত। আপনার সঙ্গী আপনার উল্টা দিকে বসা। বাম ও ডান দিকে বসা বিপরীত দল। বাম দিকের ব্যক্তি কার্ড বেটেছেন, তাই আপনি প্রথমে খেললেন। আপনার পরে কে খেলবে?
 
 id: lesson.seats.0.c0
-en: Partner plays after you
-bn: আপনার পরে সঙ্গী খেলেন
+en: Your partner
+bn: আপনার সঙ্গী
 
 id: lesson.seats.0.w0
-en: No. Partner sits across, so Partner plays third. Right plays second.
-bn: না। সঙ্গী উল্টা দিকে বসা, তাই সঙ্গী তৃতীয় খেলেন। ডান দ্বিতীয় খেলে।
+en: No. Your partner sits across from you, so partner plays third. The person to your right plays second.
+bn: না। আপনার সঙ্গী উল্টা দিকে বসা, তিনি তিন নাম্বারে খেলবেন। আপনার ডানের ব্যক্তি দুই নাম্বারে খেলবেন।
 
 id: lesson.seats.0.c1
-en: Right plays after you
-bn: আপনার পরে ডান খেলেন
+en: Person on your right
+bn: আপনার ডানের ব্যক্তি
 
 id: lesson.seats.0.w1
-en: Yes. Play runs to your right: you, then Right, then Partner, then Left.
-bn: হ্যাঁ। খেলা আপনার ডানে যায়। ক্রম: আপনি, তারপর ডান, তারপর সঙ্গী, তারপর বাঁ।
+en: Yes. Play moves from left to right: you, then the person to your right, then your partner, then the person to your left.
+bn: হ্যাঁ। খেলা বাম থেকে ডানে যায়। আপনি, তারপর আপনার ডানের ব্যক্তি, তারপর আপনার সঙ্গী, তারপর আপনার বামের ব্যক্তি।
 
 id: lesson.seats.0.c2
-en: Left plays after you
-bn: আপনার পরে বাঁ খেলেন
+en: Person on your left
+bn: আপনার বামের ব্যক্তি
 
 id: lesson.seats.0.w2
-en: No. Left dealt and plays last this round. Right plays second.
-bn: না। বাঁ বাটেছেন, আর এই চালে শেষে খেলেন। ডান দ্বিতীয় খেলে।
+en: No. Person to your left dealt the cards, so s/he plays last in this round. The person to your right plays second.
+bn: না। বাম দিকের ব্যক্তি কার্ড বেটেছেন, তাই সে খেলবে সবার শেষে। আপনার ডানের ব্যক্তি আপনার পরে খেলবে।
 
 id: lesson.seats.1.ribbon
 en: Two sides
 bn: দুই পক্ষ
 
 id: lesson.seats.1.coach
-en: Points you take and points Partner takes go on the same side of the ledger.
+en: You and Partner share one score. Card points that either of you takes go on your side.
 bn: আপনি যে পয়েন্ট নেন, আর সঙ্গী যে পয়েন্ট নেন, দুই-ই এক পক্ষে যায়।
 
 id: lesson.seats.1.c0
@@ -799,7 +795,7 @@ en: You score with Partner
 bn: আপনি সঙ্গীর সঙ্গে পয়েন্ট নেন
 
 id: lesson.seats.1.w0
-en: You win and lose the hand together. Left and Right are the other side.
+en: Yes. You and Partner win or lose the hand together. Left and Right are the other side.
 bn: আপনি ও সঙ্গী একসঙ্গে হাত জেতেন। আপনি ও সঙ্গী একসঙ্গে হাত হারেন। বাঁ ও ডান অন্য পক্ষ।
 
 id: lesson.seats.1.c1
@@ -807,7 +803,7 @@ en: You score with Right
 bn: আপনি ডানের সঙ্গে পয়েন্ট নেন
 
 id: lesson.seats.1.w1
-en: Right is an opponent. Your partner is the seat across.
+en: No. Right is on the other side. Partner sits across from you.
 bn: ডান বিপক্ষ। আপনার সঙ্গী সামনের আসন।
 
 id: lesson.seats.1.c2
@@ -815,13 +811,13 @@ en: Each seat scores alone
 bn: প্রতিটি আসন আলাদা পয়েন্ট নেয়
 
 id: lesson.seats.1.w2
-en: It is a partnership game. A bid is a promise made for two people.
+en: No. This is a partnership game. A bid is a promise for two people.
 bn: এটা জোড়ার খেলা। একটি বিড দুই জনের প্রতিশ্রুতি।
 
 # Lesson 2. The jack outranks the ace
 
 id: lesson.rank.title
-en: The jack outranks the ace
+en: The jack ranks above the ace
 bn: জ্যাক টেক্কার চেয়ে বড়
 
 id: lesson.rank.0.ribbon
@@ -829,7 +825,7 @@ en: No trump named
 bn: কোনো ট্রাম্পের নাম নেই
 
 id: lesson.rank.0.coach
-en: These four spades fell on one trick, and trump was never named. The ace is not the top card in this game.
+en: Four spades are in this trick. No player named trump. In this game the ace is not the top card.
 bn: এই চার স্পেড এক চালে পড়ে। ট্রাম্পের নাম হয়নি। এই খেলায় টেক্কা সবচেয়ে বড় তাস নয়।
 
 id: lesson.rank.0.c0
@@ -837,7 +833,7 @@ en: The ace of spades
 bn: স্পেডের টেক্কা
 
 id: lesson.rank.0.w0
-en: The ace is third. The nine beats it, and the jack beats the nine.
+en: No. The ace ranks third. The nine beats the ace. The jack beats the nine.
 bn: টেক্কা তৃতীয়। নয় টেক্কাকে হারায়। জ্যাক নয়কে হারায়।
 
 id: lesson.rank.0.c1
@@ -845,7 +841,7 @@ en: The nine of spades
 bn: স্পেডের নয়
 
 id: lesson.rank.0.w1
-en: The nine does beat the ace and the ten. The jack is higher than the nine.
+en: No. The nine beats the ace and the ten. The jack still ranks above the nine.
 bn: নয় টেক্কা ও দশকে হারায়। জ্যাক নয়ের চেয়ে বড়।
 
 id: lesson.rank.0.c2
@@ -853,7 +849,7 @@ en: The jack of spades
 bn: স্পেডের জ্যাক
 
 id: lesson.rank.0.w2
-en: In every suit the order runs jack, nine, ace, ten, king, queen, eight, seven.
+en: Yes. In every suit the order is jack, nine, ace, ten, king, queen, eight, seven.
 bn: প্রতিটি রঙে ক্রম: জ্যাক, নয়, টেক্কা, দশ, রাজা, রানী, আট, সাত।
 
 id: lesson.rank.1.ribbon
@@ -861,7 +857,7 @@ en: Hearts led
 bn: হার্টের চাল
 
 id: lesson.rank.1.coach
-en: Same rule, another suit. Highest card of the suit that was led, while trump is still hidden.
+en: The same order applies in hearts. Trump is still hidden. The highest heart in the trick wins.
 bn: একই নিয়ম। অন্য রং। ট্রাম্প উল্টো থাকলে চালের রঙের সবচেয়ে বড় তাস জেতে।
 
 id: lesson.rank.1.c0
@@ -869,7 +865,7 @@ en: The ace of hearts
 bn: হার্টের টেক্কা
 
 id: lesson.rank.1.w0
-en: The ace loses to the nine, and to a jack if one appears.
+en: No. The nine beats the ace. A jack also beats the ace.
 bn: নয় টেক্কাকে হারায়। জ্যাক থাকলে জ্যাকও টেক্কাকে হারায়।
 
 id: lesson.rank.1.c1
@@ -877,7 +873,7 @@ en: The nine of hearts
 bn: হার্টের নয়
 
 id: lesson.rank.1.w1
-en: No jack was played. The nine is the highest heart on the table.
+en: Yes. No jack is in the trick. The nine is the highest heart on the table.
 bn: জ্যাক পড়েনি। টেবিলের সবচেয়ে বড় হার্ট এই নয়।
 
 id: lesson.rank.1.c2
@@ -885,13 +881,13 @@ en: The king of hearts
 bn: হার্টের রাজা
 
 id: lesson.rank.1.w2
-en: The king is below the ten, the ace, the nine and the jack.
+en: No. The king ranks below the ten, the ace, the nine, and the jack.
 bn: রাজা দশ, টেক্কা, নয় ও জ্যাকের নিচে।
 
 # Lesson 3. Twenty-eight, counted
 
 id: lesson.points.title
-en: Twenty-eight, counted
+en: Twenty-eight card points
 bn: 28, গোনা
 
 id: lesson.points.0.ribbon
@@ -899,7 +895,7 @@ en: Count the trick
 bn: চাল গুনুন
 
 id: lesson.points.0.coach
-en: Only four ranks score points. How many card points are in this trick?
+en: Only four ranks give card points: jack 3, nine 2, ace 1, ten 1. All other ranks give 0.
 bn: শুধু চার ধরনের তাসের পয়েন্ট আছে। এই চালে কত পয়েন্ট?
 
 id: lesson.points.0.c0
@@ -907,7 +903,7 @@ en: 5
 bn: 5
 
 id: lesson.points.0.w0
-en: The jack is 3, the nine is 2, and the king and seven are worth nothing.
+en: Yes. The jack is 3. The nine is 2. The king and the seven are 0. The total is 5.
 bn: জ্যাক 3। নয় 2। রাজা ও সাতের পয়েন্ট 0।
 
 id: lesson.points.0.c1
@@ -915,7 +911,7 @@ en: 4
 bn: 4
 
 id: lesson.points.0.w1
-en: That would be a jack and an ace. A nine is worth 2, so jack plus nine is 5.
+en: No. A jack and an ace total 4. Here the nine is 2, so jack plus nine is 5.
 bn: জ্যাক ও টেক্কা হলে 4। নয়ের পয়েন্ট 2। জ্যাক ও নয় মিলে 5।
 
 id: lesson.points.0.c2
@@ -923,7 +919,7 @@ en: 13
 bn: 13
 
 id: lesson.points.0.w2
-en: Kings and queens are not worth ten here. They score zero.
+en: No. Kings and queens are not worth 10 here. They give 0 card points.
 bn: এই খেলায় রাজা ও রানীর পয়েন্ট 10 নয়। তাদের পয়েন্ট 0।
 
 id: lesson.points.1.ribbon
@@ -931,7 +927,7 @@ en: The whole pack
 bn: পুরো প্যাক
 
 id: lesson.points.1.coach
-en: A suit is jack 3, nine 2, ace 1, ten 1. Four suits are on the table. How many points are in the pack?
+en: One suit has jack 3, nine 2, ace 1, and ten 1. That is 7 card points. Four suits are on the table.
 bn: এক রঙে জ্যাক 3, নয় 2, টেক্কা 1, দশ 1। টেবিলে চার রং। প্যাকে কত পয়েন্ট?
 
 id: lesson.points.1.c0
@@ -939,7 +935,7 @@ en: 28
 bn: 28
 
 id: lesson.points.1.w0
-en: Seven points in a suit, four suits, 28. This table does not add a point for the last trick. The name 29 comes from an older rule.
+en: Yes. Four suits times 7 is 28. This table adds no point for the last trick. The name 29 comes from an older rule.
 bn: এক রঙে 7 পয়েন্ট। চার রঙে 28। এই টেবিল শেষ চালে পয়েন্ট যোগ করে না। 29 নাম একটি পুরনো নিয়ম থেকে আসে।
 
 id: lesson.points.1.c1
@@ -947,7 +943,7 @@ en: 29
 bn: 29
 
 id: lesson.points.1.w1
-en: Some old tables gave one point for the last trick. That point gave the game its name. This table counts the cards only: 28.
+en: No. Some old tables gave 1 point for the last trick. That point named the game. This table counts cards only: 28.
 bn: কিছু পুরনো টেবিল শেষ চালে 1 পয়েন্ট দিত। সেই পয়েন্ট থেকে খেলার নাম 29। এই টেবিল শুধু তাস গোনে: 28।
 
 id: lesson.points.1.c2
@@ -955,13 +951,13 @@ en: 120
 bn: 120
 
 id: lesson.points.1.w2
-en: That total belongs to other trick-taking games. A jack here is 3, not 1 and not 10.
+en: No. That total belongs to other games. Here a jack is worth 3, not 1 or 10.
 bn: সেই যোগ অন্য তাসের খেলার। এই খেলায় জ্যাক 3। জ্যাক 1 নয়। জ্যাক 10 নয়।
 
 # Lesson 4. Sixteen is a promise
 
 id: lesson.bid.title
-en: Sixteen is a promise
+en: A bid of 16 is a promise
 bn: 16 একটি প্রতিশ্রুতি
 
 id: lesson.bid.0.ribbon
@@ -969,7 +965,7 @@ en: Your bid
 bn: আপনার বিড
 
 id: lesson.bid.0.coach
-en: Left dealt, so you speak first. These are your four cards: jack and nine of hearts, king of spades, seven of diamonds. Five points, and a suit you can name. The smallest bid is 16, out of 28.
+en: Left dealt, so you bid first. You hold the jack and nine of hearts, the king of spades, and the seven of diamonds. That is 5 card points and a suit you can name. The smallest bid is 16 out of 28.
 bn: বাঁ ডিল করেছেন। তাই আপনি আগে বলেন। আপনার চার তাস: হার্টের জ্যাক, হার্টের নয়, স্পেডের রাজা, ডায়মন্ডের সাত। পয়েন্ট 5। আপনি একটি রঙের নাম দিতে পারেন। সবচেয়ে ছোট বিড 16। মোট পয়েন্ট 28।
 
 id: lesson.bid.0.c0
@@ -977,7 +973,7 @@ en: Pass
 bn: পাস
 
 id: lesson.bid.0.w0
-en: A jack and nine of the same suit is a real opening. A pass lets another player name trump.
+en: No. A jack and nine of one suit are a strong start. A pass lets another player name trump.
 bn: একই রঙের জ্যাক ও নয় একটি ভালো শুরু। পাস করলে অন্য খেলোয়াড় ট্রাম্পের নাম দেন।
 
 id: lesson.bid.0.c1
@@ -985,7 +981,7 @@ en: Bid 16
 bn: 16 বিড করুন
 
 id: lesson.bid.0.w1
-en: 16 promises that your side will take 16 of the 28. It does not promise the rest of the pack. You still have four cards to come.
+en: Yes. A bid of 16 promises 16 of the 28 card points for your side. You still receive four more cards.
 bn: 16 মানে আপনার পক্ষ 28-এর মধ্যে 16 নেবে। বাকি পয়েন্টের প্রতিশ্রুতি নয়। আরও চার তাস আসবে।
 
 id: lesson.bid.0.c2
@@ -993,7 +989,7 @@ en: Bid 28
 bn: 28 বিড করুন
 
 id: lesson.bid.0.w2
-en: 28 means every point in the pack. Four cards do not show that.
+en: No. A bid of 28 means every card point in the pack. Four cards do not show that.
 bn: 28 মানে প্যাকের সব পয়েন্ট। চার তাস সেই কথা দেখায় না।
 
 id: lesson.bid.1.ribbon
@@ -1001,7 +997,7 @@ en: A blank hand
 bn: ফাঁকা হাত
 
 id: lesson.bid.1.coach
-en: A different deal. You are on the dealer's right again, and your four cards are a king, a queen, an eight and a seven. No points at all.
+en: This is a new deal. You sit on the dealer's right again. You hold a king, a queen, an eight, and a seven. You have 0 card points.
 bn: অন্য ডিল। আপনি আবার ডিলারের ডানে। আপনার চার তাস: এক রাজা, এক রানী, এক আট, এক সাত। পয়েন্ট 0।
 
 id: lesson.bid.1.c0
@@ -1009,7 +1005,7 @@ en: Bid 16 anyway
 bn: তবু 16 বিড করুন
 
 id: lesson.bid.1.w0
-en: The auction does not start. No points in this seat stop the deal.
+en: No. The auction does not start. When this seat has 0 card points, the deal stops.
 bn: ডাক শুরু হয় না। এই আসনে পয়েন্ট না থাকলে ডিল বন্ধ।
 
 id: lesson.bid.1.c1
@@ -1017,7 +1013,7 @@ en: Pass, and let the others bid
 bn: পাস করুন। অন্যরা বিড করুক
 
 id: lesson.bid.1.w1
-en: There is nothing to pass on. The cards are gathered and the next player deals.
+en: No. There is nothing to pass. The players gather the cards. The next player deals.
 bn: পাসের কিছু নেই। তাস তোলা হয়। পরের খেলোয়াড় ডিল করেন।
 
 id: lesson.bid.1.c2
@@ -1025,7 +1021,7 @@ en: Stop the deal
 bn: ডিল বন্ধ করুন
 
 id: lesson.bid.1.w2
-en: The deal stops when the first player gets no points in the first four cards. The deal also stops when the partner of the dealer gets no points. The other two seats can hold no points. That does not stop the deal.
+en: Yes. The deal stops if the first player has 0 card points in the first four cards. The deal also stops if the dealer's Partner has 0. The other two seats may have 0. That does not stop the deal.
 bn: প্রথম খেলোয়াড়ের প্রথম চার তাসে পয়েন্ট না থাকলে ডিল বন্ধ। ডিলারের সঙ্গীর প্রথম চার তাসে পয়েন্ট না থাকলেও ডিল বন্ধ। অন্য দুই আসনে পয়েন্ট না থাকলে ডিল চলে।
 
 # Lesson 5. A heart is not trump yet
@@ -1039,7 +1035,7 @@ en: Hearts named · still face down
 bn: হার্টের নাম হয়েছে। তাস উল্টো
 
 id: lesson.hidden.0.coach
-en: You won the bid at 17 and named hearts. One heart is face down in front of you. Left led the ten of spades. Right played the jack of hearts and did not ask. Partner played the eight of spades. Who is winning?
+en: You won the bid at 17 and named hearts. One heart stays face down in front of you. Left led the ten of spades. Right played the jack of hearts and did not ask. Partner played the eight of spades.
 bn: আপনি 17-তে বিড জিতেন। আপনি হার্টের নাম দেন। একটি হার্ট আপনার সামনে উল্টো। বাঁ স্পেডের দশ দিয়ে চাল দেন। ডান হার্টের জ্যাক খেলেন। ডান চান না। সঙ্গী স্পেডের আট খেলেন। কে জিতছেন?
 
 id: lesson.hidden.0.c0
@@ -1047,7 +1043,7 @@ en: The jack of hearts
 bn: হার্টের জ্যাক
 
 id: lesson.hidden.0.w0
-en: Hearts have no power while the card stays face down. A heart played now is only a heart.
+en: No. Hearts have no power while the named card stays face down. A heart played now is only a heart.
 bn: তাস উল্টো থাকলে হার্টের জোর নেই। এখনকার হার্ট শুধু হার্ট।
 
 id: lesson.hidden.0.c1
@@ -1055,7 +1051,7 @@ en: The ten of spades
 bn: স্পেডের দশ
 
 id: lesson.hidden.0.w1
-en: The highest spade wins. The jack of hearts cannot take a spade trick until a player asks.
+en: Yes. The highest spade wins. The jack of hearts cannot win a spade trick until a player asks.
 bn: সবচেয়ে বড় স্পেড জেতে। কেউ চাওয়ার আগে হার্টের জ্যাক স্পেডের চাল নিতে পারে না।
 
 id: lesson.hidden.0.c2
@@ -1063,7 +1059,7 @@ en: The eight of spades
 bn: স্পেডের আট
 
 id: lesson.hidden.0.w2
-en: The eight is the lowest spade in the trick.
+en: No. The eight is the lowest spade in the trick.
 bn: এই চালের সবচেয়ে ছোট স্পেড এই আট।
 
 id: lesson.hidden.1.ribbon
@@ -1071,23 +1067,23 @@ en: Hearts revealed
 bn: হার্ট খুলেছে
 
 id: lesson.hidden.1.coach
-en: Same cards, one change. You have no spade, so you ask. The face-down card is turned up and hearts are trump for this trick and every trick after it. The jack of hearts was already on the table.
+en: The cards are the same. One fact changes. You have no spade, so you ask. The face-down card turns face up. Hearts are trump for this trick and every trick after it. The jack of hearts is already on the table.
 bn: তাস একই। একটা বদল। আপনার স্পেড নেই। আপনি চান। উল্টো তাস খোলে। এই চালে হার্ট ট্রাম্প। পরের চালেও হার্ট ট্রাম্প। হার্টের জ্যাক আগেই টেবিলে ছিল।
 
 id: lesson.hidden.1.c0
-en: The jack of hearts takes it
+en: The jack of hearts wins it
 bn: হার্টের জ্যাক চাল নেয়
 
 id: lesson.hidden.1.w0
-en: The ask covers this trick too. A heart already in the trick can win. You asked, so you play a heart if you hold one.
+en: Yes. The ask covers this trick too. A heart already in the trick can win. After you ask, you play a heart if you hold one.
 bn: চাওয়া এই চালকেও ধরে। চালে আগে থেকে থাকা হার্ট জিততে পারে। আপনি চেয়েছেন। তাই হার্ট থাকলে আপনি হার্ট খেলেন।
 
 id: lesson.hidden.1.c1
-en: The ten of spades still takes it
+en: The ten of spades still wins it
 bn: স্পেডের দশ এখনও চাল নেয়
 
 id: lesson.hidden.1.w1
-en: That was true before the ask. After the ask, the highest heart in the trick beats every spade.
+en: No. That was true before the ask. After the ask, the highest heart in the trick beats every spade.
 bn: চাওয়ার আগে সেই কথা সত্য ছিল। চাওয়ার পর চালের সবচেয়ে বড় হার্ট প্রতিটি স্পেডকে হারায়।
 
 id: lesson.hidden.2.ribbon
@@ -1095,7 +1091,7 @@ en: Name a suit, or call the seventh
 bn: একটি রঙের নাম দিন, অথবা সপ্তম তাস ডাকুন
 
 id: lesson.hidden.2.coach
-en: Your four cards are the jack and nine of hearts, the king of spades, and the seven of diamonds. You may name a suit. Or you may call the seventh card. That card is the third new card. You do not see it yet. It becomes trump, and it stays face down.
+en: You hold the jack and nine of hearts, the king of spades, and the seven of diamonds. You may name a suit. Or you may call the seventh card. That card is the third of the next four. You do not see it yet. It becomes trump and stays face down.
 bn: আপনার চার তাস: হার্টের জ্যাক, হার্টের নয়, স্পেডের রাজা, ডায়মন্ডের সাত। আপনি একটি রঙের নাম দিতে পারেন। অথবা আপনি সপ্তম তাস ডাকতে পারেন। সেই তাস নতুন চার তাসের তৃতীয় তাস। আপনি সেই তাস এখন দেখেন না। সেই তাস ট্রাম্প হয়। সেই তাস উল্টো থাকে।
 
 id: lesson.hidden.2.c0
@@ -1103,7 +1099,7 @@ en: Name hearts
 bn: হার্টের নাম দিন
 
 id: lesson.hidden.2.w0
-en: You can already see a suit worth naming. Call the seventh card when the four cards are split and you do not want to name a suit.
+en: Yes. You already see a suit worth naming. Call the seventh card only when your four cards are split and you will not name a suit.
 bn: আপনি আগেই একটি ভালো রং দেখেন। চার তাস ভাগ হয়ে থাকলে, এবং কোনো রঙের নাম না দিলে, সপ্তম তাস ডাকুন।
 
 id: lesson.hidden.2.c1
@@ -1111,7 +1107,7 @@ en: Call the seventh card
 bn: সপ্তম তাস ডাকুন
 
 id: lesson.hidden.2.w1
-en: You give up the jack and nine of hearts. You do not see the seventh card.
+en: No. You would give up the jack and nine of hearts. You also do not see the seventh card.
 bn: আপনি হার্টের জ্যাক ও নয় ছাড়েন। আপনি সপ্তম তাস দেখেন না।
 
 # Lesson 6. Ask on purpose
@@ -1121,11 +1117,11 @@ en: Ask on purpose
 bn: ইচ্ছে করে চান
 
 id: lesson.ask.0.ribbon
-en: Partner is winning · trump hidden
+en: Partner wins · trump hidden
 bn: সঙ্গী জিতছেন। ট্রাম্প উল্টো
 
 id: lesson.ask.0.coach
-en: Spades were led. Partner's ace is winning the trick, ahead of a king and a seven. You have no spade. Trump is still hidden, and you hold the jack of hearts. What do you do?
+en: Left led spades. Partner's ace already wins the trick against a king and a seven. You have no spade. Trump is still hidden. You hold the jack of hearts.
 bn: স্পেডের চাল। সঙ্গীর টেক্কা চাল জিতছে। চালে এক রাজা ও এক সাতও আছে। আপনার স্পেড নেই। ট্রাম্প উল্টো। আপনার হাতে হার্টের জ্যাক। আপনি কী করেন?
 
 id: lesson.ask.0.c0
@@ -1133,23 +1129,23 @@ en: Ask for trump
 bn: ট্রাম্প চান
 
 id: lesson.ask.0.w0
-en: Partner already has the trick. An ask names the suit. You then play a trump if you hold one. Your side was already winning the trick.
+en: No. Partner already wins the trick. An ask names the suit. Then you must play a trump if you hold one.
 bn: সঙ্গী আগেই চাল পেয়েছেন। চাইলে রঙের নাম হয়। তারপর ট্রাম্প থাকলে আপনি ট্রাম্প খেলেন। আপনার পক্ষ আগেই চাল জিতছিল।
 
 id: lesson.ask.0.c1
-en: Discard, and leave the suit hidden
+en: Discard, and leave trump hidden
 bn: তাস ফেলুন। রং উল্টো থাকুক
 
 id: lesson.ask.0.w1
-en: A low discard keeps the face-down card face down. Ask when you need the trick, not when Partner has already taken it.
+en: Yes. A low discard keeps the face-down card face down. Ask when you need the trick. Do not ask when Partner already wins it.
 bn: নিচু তাস ফেললে উল্টো তাস উল্টো থাকে। চাল দরকার হলে চান। সঙ্গী চাল নিলে চান না।
 
 id: lesson.ask.1.ribbon
-en: Five points, and Partner is losing
+en: Five card points, and Partner loses
 bn: 5 পয়েন্ট। সঙ্গী হারছেন
 
 id: lesson.ask.1.coach
-en: This time Partner's seven is losing to a jack, and a nine is in the trick too. That is five points if nothing changes. You have no card of the led suit, and you do not know the hidden suit.
+en: Partner's seven loses to a jack. A nine is also in the trick. That is 5 card points if nothing changes. You have no card of the led suit. You do not know the hidden suit.
 bn: এবার সঙ্গীর সাত একটি জ্যাকের কাছে হারছে। চালে একটি নয়ও আছে। কিছু না বদলালে পয়েন্ট 5। চালের রঙের তাস আপনার নেই। উল্টো রং আপনি জানেন না।
 
 id: lesson.ask.1.c0
@@ -1157,7 +1153,7 @@ en: Ask
 bn: চান
 
 id: lesson.ask.1.w0
-en: The trick has many points, and your side is not winning it. If you hold a trump, you play it. You might not hold one. That is the risk. Five points is the reason to take the risk.
+en: Yes. The trick has many card points, and your side does not win it. If you hold a trump, you play it. You may hold none. That is the risk. Five card points justify the risk.
 bn: চালে অনেক পয়েন্ট। আপনার পক্ষ জিতছে না। ট্রাম্প থাকলে আপনি সেই ট্রাম্প খেলেন। ট্রাম্প নাও থাকতে পারে। সেটা ঝুঁকি। 5 পয়েন্টের জন্য ঝুঁকি নিন।
 
 id: lesson.ask.1.c1
@@ -1165,7 +1161,7 @@ en: Discard, and keep the ask for later
 bn: তাস ফেলুন। চাওয়া পরে রাখুন
 
 id: lesson.ask.1.w1
-en: Keep the ask for later when Partner is already winning. Here the jack and the nine go to the other side.
+en: No. Keep the ask for later only when Partner already wins. Here the jack and the nine go to the other side.
 bn: সঙ্গী জিতলে চাওয়া পরে রাখা ঠিক। এখানে জ্যাক ও নয় বিপক্ষের কাছে যায়।
 
 # Lesson 7. King and queen of trump
@@ -1179,7 +1175,7 @@ en: Bid 20 · hearts revealed
 bn: বিড 20। হার্ট খুলেছে
 
 id: lesson.marriage.0.coach
-en: Hearts are revealed. The bid was 20. You still hold the king and queen of hearts. If you show them, what does the target become?
+en: Hearts are face up. The bid was 20. You still hold the king and queen of hearts. A marriage is that pair in one hand. If you show them, what is the new target?
 bn: হার্ট খুলেছে। বিড ছিল 20। আপনার হাতে হার্টের রাজা ও রানী আছে। দেখালে লক্ষ্য কত হয়?
 
 id: lesson.marriage.0.c0
@@ -1187,7 +1183,7 @@ en: 16
 bn: 16
 
 id: lesson.marriage.0.w0
-en: A bid of 19 or 20 comes down to 16. Both cards have to be in the hand, and the suit has to be face up.
+en: Yes. A bid of 19 or 20 falls to 16. Both cards must be in your hand. Trump must be face up.
 bn: 19 বা 20 বিড 16-তে নামে। দুই তাস হাতে থাকতে হয়। রং খোলা থাকতে হয়।
 
 id: lesson.marriage.0.c1
@@ -1195,7 +1191,7 @@ en: 20
 bn: 20
 
 id: lesson.marriage.0.w1
-en: 20 is the bid. The marriage changes the target.
+en: No. 20 is the old bid. The marriage lowers the target.
 bn: 20 হলো বিড। বিয়ে লক্ষ্য বদলায়।
 
 id: lesson.marriage.0.c2
@@ -1203,7 +1199,7 @@ en: 24
 bn: 24
 
 id: lesson.marriage.0.w2
-en: Showing your own king and queen never raises your target.
+en: No. If you show your own king and queen, your target does not rise.
 bn: নিজের রাজা ও রানী দেখালে লক্ষ্য বাড়ে না।
 
 id: lesson.marriage.1.ribbon
@@ -1211,7 +1207,7 @@ en: Bid 17 · hearts revealed
 bn: বিড 17। হার্ট খুলেছে
 
 id: lesson.marriage.1.coach
-en: Same cards, but the bid was 17.
+en: You still hold the king and queen of hearts. Trump is face up. The bid was 17, not 20.
 bn: তাস একই। বিড ছিল 17।
 
 id: lesson.marriage.1.c0
@@ -1219,7 +1215,7 @@ en: It stays 17
 bn: লক্ষ্য 17 থাকে
 
 id: lesson.marriage.1.w0
-en: Bids of 16, 17 and 18 get no help from a marriage. The reduction starts at 19.
+en: Yes. Bids of 16, 17, and 18 get no help from a marriage. The reduction starts at 19.
 bn: 16, 17 ও 18 বিডে বিয়ে সাহায্য করে না। কমানো 19 থেকে শুরু।
 
 id: lesson.marriage.1.c1
@@ -1227,7 +1223,7 @@ en: It falls to 16
 bn: লক্ষ্য 16 হয়
 
 id: lesson.marriage.1.w1
-en: 16 is where a bid of 19 or 20 lands. A 17 does not move.
+en: No. A bid of 19 or 20 falls to 16. A bid of 17 does not move.
 bn: 19 বা 20 বিড 16-তে নামে। 17 বদলায় না।
 
 id: lesson.marriage.1.c2
@@ -1235,7 +1231,7 @@ en: It falls to 13
 bn: লক্ষ্য 13 হয়
 
 id: lesson.marriage.1.w2
-en: The marriage never takes four off a low bid. Those bids were already at the floor.
+en: No. A marriage never subtracts 4 from a low bid. Those bids are already at the lowest target.
 bn: নিচু বিড থেকে বিয়ে 4 কাটে না। সেই বিড আগেই তলানিতে।
 
 id: lesson.marriage.2.ribbon
@@ -1243,7 +1239,7 @@ en: Their king and queen
 bn: বিপক্ষের রাজা ও রানী
 
 id: lesson.marriage.2.coach
-en: You are the bidding side. The other side is the one holding the king and queen of trump.
+en: You are the bidding side. The other side holds the king and queen of trump.
 bn: আপনি বিডের পক্ষ। বিপক্ষের হাতে ট্রাম্পের রাজা ও রানী।
 
 id: lesson.marriage.2.c0
@@ -1251,7 +1247,7 @@ en: Your target stays where it is
 bn: আপনার লক্ষ্য একই থাকে
 
 id: lesson.marriage.2.w0
-en: At this table a marriage helps only the bidding side. The king and queen of the other side do not raise the target.
+en: Yes. At this table a marriage helps only the bidding side. The other side's king and queen do not raise your target.
 bn: এই টেবিলে বিয়ে শুধু বিডের পক্ষকে সাহায্য করে। বিপক্ষের রাজা ও রানী লক্ষ্য বাড়ায় না।
 
 id: lesson.marriage.2.c1
@@ -1259,7 +1255,7 @@ en: Your target rises by 4
 bn: আপনার লক্ষ্য 4 বাড়ে
 
 id: lesson.marriage.2.w1
-en: Some tables use that rule. This table does not. A marriage helps only the bidding side.
+en: No. Some tables use that rule. This table does not. A marriage helps only the bidding side.
 bn: কিছু টেবিল সেই নিয়ম ব্যবহার করে। এই টেবিল করে না। বিয়ে শুধু বিডের পক্ষকে সাহায্য করে।
 
 # Lesson 8. Red six, black six
@@ -1273,7 +1269,7 @@ en: 18 card points against a bid of 16
 bn: 18 পয়েন্ট। বিড 16
 
 id: lesson.pips.0.coach
-en: You promised 16 and your side took 18 card points. The match is scored in pips, on a red six and a black six, and it ends at six of either colour.
+en: You promised 16. Your side took 18 card points. The match score uses pips on a red six and a black six. Six pips of one colour end the match.
 bn: আপনি 16 প্রতিশ্রুতি দেন। আপনার পক্ষ 18 পয়েন্ট নেয়। ম্যাচের হিসাব দাগে। লাল ছয় ও কালো ছয় আছে। যেকোনো রঙের ছয় দাগে ম্যাচ শেষ।
 
 id: lesson.pips.0.c0
@@ -1281,7 +1277,7 @@ en: Your side shows one red pip
 bn: আপনার পক্ষ এক লাল দাগ দেখায়
 
 id: lesson.pips.0.w0
-en: Made. One red pip. Only the bidding side's score moves. The 18 were card points, not 18 pips.
+en: Yes. You made the contract, so you show one red pip. Only the bidding side's score moves. The 18 were card points, not pips.
 bn: চুক্তি টেকে। এক লাল দাগ। শুধু বিডের পক্ষের দাগ বদলায়। 18 ছিল পয়েন্ট। 18 দাগ নয়।
 
 id: lesson.pips.0.c1
@@ -1289,7 +1285,7 @@ en: Each side shows a pip
 bn: দুই পক্ষই এক দাগ দেখায়
 
 id: lesson.pips.0.w1
-en: The pips of the other side stay as they are. That is true if you make the bid. That is true if you miss the bid.
+en: No. The other side's pips stay as they are. That is true if you make the bid. That is true if you miss the bid.
 bn: বিপক্ষের দাগ একই থাকে। আপনি বিড রাখলেও এই কথা সত্য। আপনি বিড না রাখলেও এই কথা সত্য।
 
 id: lesson.pips.0.c2
@@ -1297,7 +1293,7 @@ en: Your side shows eighteen red pips
 bn: আপনার পক্ষ আঠারো লাল দাগ দেখায়
 
 id: lesson.pips.0.w2
-en: Card points and pips are different. The hand is worth one pip. A double makes it two pips. A redouble makes it four pips.
+en: No. Card points and pips are different. A hand is worth one pip. A double makes it two. A redouble makes it four.
 bn: পয়েন্ট ও দাগ আলাদা। হাতের দাম এক দাগ। ডাবল হলে দুই দাগ। রিডাবল হলে চার দাগ।
 
 id: lesson.pips.1.ribbon
@@ -1305,7 +1301,7 @@ en: Doubled · worth two pips
 bn: ডাবল। দাম দুই দাগ
 
 id: lesson.pips.1.coach
-en: Before the second half of the deal, Right doubled. You still made the contract. How many red pips?
+en: Before the second half of the deal, Right doubled. You still made the contract. How many red pips do you show?
 bn: ডিলের দ্বিতীয় ভাগের আগে ডান ডাবল করেন। আপনি চুক্তি রাখেন। কত লাল দাগ?
 
 id: lesson.pips.1.c0
@@ -1313,7 +1309,7 @@ en: Two
 bn: দুই
 
 id: lesson.pips.1.w0
-en: A double is two pips, won or lost. A redouble would have made it four. Six red pips wins the match. Six black pips loses it.
+en: Yes. A double is worth two pips, won or lost. A redouble would make it four. Six red pips win the match. Six black pips lose it.
 bn: ডাবল মানে দুই দাগ। জিতলেও দুই। হারলেও দুই। রিডাবল হলে চার দাগ। ছয় লাল দাগে ম্যাচ জয়। ছয় কালো দাগে ম্যাচ হার।
 
 id: lesson.pips.1.c1
@@ -1321,7 +1317,7 @@ en: One
 bn: এক
 
 id: lesson.pips.1.w1
-en: One pip is a hand with no double. A player doubles before anyone sees the other four cards.
+en: No. One pip is a hand with no double. A player doubles before anyone sees the other four cards.
 bn: এক দাগ মানে ডাবল নেই। একজন খেলোয়াড় ডাবল করেন বাকি চার তাস দেখার আগে।
 
 id: lesson.pips.1.c2
@@ -1329,7 +1325,7 @@ en: Two black pips
 bn: দুই কালো দাগ
 
 id: lesson.pips.1.w2
-en: Black is a miss. You made it, so the pips are red.
+en: No. Black means a miss. You made the contract, so you show red pips.
 bn: কালো দাগ মানে চুক্তি ভাঙে। আপনি চুক্তি রাখেন। তাই দাগ লাল।
 
 # Rules
@@ -1565,8 +1561,8 @@ bn: তাসের পয়েন্ট ও বিয়ের সংখ্য
 # Lesson questions
 
 id: lesson.seats.0.ask
-en: You lead. Who plays after you?
-bn: আপনি প্রথম খেলেন। আপনার পরে কে খেলে?
+en: Who plays after you?
+bn: আপনার পরে কে খেলবে?
 
 id: lesson.seats.1.ask
 en: Who do you score with?
@@ -1585,7 +1581,7 @@ en: How many card points are in this trick?
 bn: এই চালে কত পয়েন্ট?
 
 id: lesson.points.1.ask
-en: How many points are in the pack?
+en: How many card points are in the pack?
 bn: প্যাকে কত পয়েন্ট?
 
 id: lesson.bid.0.ask
@@ -1597,15 +1593,15 @@ en: What happens to this hand?
 bn: এই হাতের কী হয়?
 
 id: lesson.hidden.0.ask
-en: Who is winning the trick?
+en: Who wins the trick?
 bn: কে চাল জিতছেন?
 
 id: lesson.hidden.1.ask
-en: Who takes the trick after you ask?
+en: Who wins the trick after you ask?
 bn: আপনি ডাকলে কে চাল নেন?
 
 id: lesson.hidden.2.ask
-en: What do you call for trump?
+en: What do you choose for trump?
 bn: ট্রাম্পের জন্য আপনি কী ডাকেন?
 
 id: lesson.ask.0.ask
@@ -1633,5 +1629,5 @@ en: What does the match score show?
 bn: ম্যাচের স্কোর কী দেখায়?
 
 id: lesson.pips.1.ask
-en: How many red pips do you uncover?
+en: How many red pips do you show?
 bn: আপনি কত লাল দাগ খোলেন?

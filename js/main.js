@@ -13,7 +13,6 @@
     missing: false,
     match: null,
     auto: false,
-    quiet: false,
     moreBids: false,
     flash: "",
     install: null,
@@ -247,8 +246,7 @@
       dim: !!(playable && hand.turnSeat === "S" && !state.auto),
     });
     const spec = TN.coachSpec(match, "S");
-    const coachFull = tx(spec.key, spec.en, spec.vars);
-    const coach = state.quiet ? firstSentence(coachFull) : coachFull;
+    const coach = tx(spec.key, spec.en, spec.vars);
     const flashText = state.flash ? tx(state.flashKey, state.flash, state.flashVars) : "";
     const flash = flashText
       ? '<p class="govuk-error-message"><span class="govuk-visually-hidden">' + UI.esc(tx("lesson.error", "Error")) + ": </span>" + UI.esc(flashText) + "</p>"
@@ -271,14 +269,6 @@
       '<div class="choices">' +
       controls(hand) +
       "</div>" +
-      '<div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">' +
-      '<div class="govuk-checkboxes__item">' +
-      '<input class="govuk-checkboxes__input" id="quiet" type="checkbox" data-act="quiet"' +
-      (state.quiet ? " checked" : "") +
-      ">" +
-      '<label class="govuk-label govuk-checkboxes__label" for="quiet">' +
-      UI.esc(tx("play.quiet", "Short notes")) +
-      "</label></div></div>" +
       (log ? '<h2 class="govuk-heading-s">' + UI.esc(tx("play.log", "This hand")) + '</h2><ul class="govuk-list govuk-list--bullet log">' + log + "</ul>" : "");
     scheduleBots();
   }
@@ -465,11 +455,6 @@
     return html;
   }
 
-  function firstSentence(text) {
-    const match = text.match(/^[\s\S]*?[।.!?]/);
-    return match ? match[0].trim() : text;
-  }
-
   function scheduleBots() {
     const token = ++state.botToken;
     const match = state.match;
@@ -500,7 +485,7 @@
         return;
       }
       render();
-    }, state.auto || state.quiet ? 240 : 620);
+    }, state.auto ? 240 : 620);
   }
 
   function act(name, node) {
@@ -518,11 +503,6 @@
     }
     if (name === "install" && state.install) {
       state.install.prompt();
-      return;
-    }
-    if (name === "quiet") {
-      state.quiet = node.checked;
-      if (state.mode === "play") render();
       return;
     }
     if (name === "goto-lesson") {
@@ -677,7 +657,7 @@
 
   document.body.addEventListener("click", (event) => {
     const node = event.target.closest("[data-act]");
-    if (!node || node.dataset.act === "quiet" || node.dataset.act === "choose") return;
+    if (!node || node.dataset.act === "choose") return;
     if (node.tagName === "A") event.preventDefault();
     act(node.dataset.act, node);
   });
@@ -685,8 +665,7 @@
   document.body.addEventListener("change", (event) => {
     const node = event.target.closest("[data-act]");
     if (!node) return;
-    if (node.dataset.act === "quiet") act("quiet", node);
-    else if (node.dataset.act === "choose") act("choose", node);
+    if (node.dataset.act === "choose") act("choose", node);
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
