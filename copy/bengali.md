@@ -660,6 +660,10 @@ id: coach.matchLoss
 en: The other side has six pips. The match is theirs.
 bn: বিপক্ষের ছয় দাগ। ম্যাচ বিপক্ষের।
 
+id: term.pips
+en: pips
+bn: দাগ
+
 id: coach.handEnd.us.made
 en: Your side took {got} card points. The target was {target}. The contract stands. Only the pips of the bidding side move.
 bn: আপনার পক্ষ {got} পয়েন্ট নেয়। লক্ষ্য ছিল {target}। চুক্তি টেকে। শুধু বিডের পক্ষের দাগ বদলায়।

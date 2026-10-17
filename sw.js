@@ -1,4 +1,4 @@
-const CACHE = "twenty-nine-govuk-18";
+const CACHE = "twenty-nine-govuk-19";
 const FILES = [
   "./",
   "./index.html",

@@ -290,11 +290,21 @@
     );
   }
 
+  function linkWord(text, section, term, esc) {
+    const plain = String(text == null ? "" : text);
+    const needle = String(term || "");
+    if (!needle) return esc(plain);
+    const at = plain.indexOf(needle);
+    if (at === -1) return esc(plain);
+    return esc(plain.slice(0, at)) + rulesLink(section, needle, esc) + esc(plain.slice(at + needle.length));
+  }
+
   return {
     SECTIONS: SECTIONS,
     parseHash: parseHash,
     hashFor: hashFor,
     rulesHTML: rulesHTML,
     rulesLink: rulesLink,
+    linkWord: linkWord,
   };
 });

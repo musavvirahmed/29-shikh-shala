@@ -75,3 +75,11 @@ test("rulesLink opens a section in a new tab", () => {
   assert.match(html, /rel="noopener"/);
   assert.match(html, />Asking</);
 });
+
+test("linkWord wraps the first matching term in a rules deep link", () => {
+  const text = "The contract stands. Only the pips of the bidding side move.";
+  const html = Rules.linkWord(text, "pips", "pips", esc);
+  assert.match(html, /Only the <a class="govuk-link" href="#rules-pips" target="_blank" rel="noopener">pips<\/a> of the bidding side/);
+  assert.equal((html.match(/#rules-pips/g) || []).length, 1);
+  assert.equal(Rules.linkWord("No jargon here.", "pips", "pips", esc), "No jargon here.");
+});

@@ -292,6 +292,10 @@
     });
     const spec = TN.coachSpec(match, "S");
     const coach = tx(spec.key, spec.en, spec.vars);
+    const coachBody =
+      hand.phase === "handEnd"
+        ? Rules.linkWord(coach, "pips", tx("term.pips", "pips"), UI.esc)
+        : UI.esc(coach);
     const flashText = state.flash ? tx(state.flashKey, state.flash, state.flashVars) : "";
     const flash = flashText
       ? '<p class="govuk-error-message"><span class="govuk-visually-hidden">' + UI.esc(tx("lesson.error", "Error")) + ": </span>" + UI.esc(flashText) + "</p>"
@@ -309,7 +313,7 @@
       "</h1>" +
       flash +
       '<p class="govuk-body">' +
-      UI.esc(coach) +
+      coachBody +
       "</p>" +
       '<div class="choices">' +
       controls(hand) +
