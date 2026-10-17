@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#016500" />
+    <meta name="description" content="A PySol-style table that teaches the Bangladeshi card game 29." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Twenty-nine</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/table.css" />
+  </head>
+  <body>
+    <div class="desk">
+      <header class="mast">
+        <p class="wordmark">Twenty-nine</p>
+        <nav id="nav">
+          <button type="button" data-act="nav" data-mode="learn">Learn</button>
+          <button type="button" data-act="nav" data-mode="play">Play</button>
+          <button type="button" data-act="nav" data-mode="rules">Rules</button>
+        </nav>
+        <p class="legend" title="How many points a card scores when your side wins the trick">
+          <span>Card points</span>
+          J 3 · 9 2 · A 1 · 10 1 · rest 0
+        </p>
+        <button type="button" id="install" data-act="install" hidden>Install</button>
+      </header>
+      <div class="layout">
+        <div id="felt" class="felt"></div>
+        <aside id="pad" class="pad"></aside>
+      </div>
+    </div>
+    <script src="js/engine.js"></script>
+    <script src="js/bots.js"></script>
+    <script src="js/lessons.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
