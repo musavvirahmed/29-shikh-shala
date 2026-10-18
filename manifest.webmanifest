@@ -1,7 +1,7 @@
 {
   "name": "29 শিখ শালা!",
   "short_name": "29 শিখ শালা!",
-  "description": "A table that teaches the card game 29.",
+  "description": "Learn how to play the card game 29, which is massively popular in Bangladesh.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
