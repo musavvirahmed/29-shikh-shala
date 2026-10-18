@@ -1,0 +1,19 @@
+name: Problem at the table
+description: Something in the game looked wrong.
+title: "Problem at the table"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: A sentence is enough.
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
+      description: What were you doing, and what looked wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?

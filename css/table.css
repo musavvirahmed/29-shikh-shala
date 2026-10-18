@@ -687,3 +687,17 @@ button.card,
     transform: none;
   }
 }
+
+.report-issue {
+  margin-left: 16px;
+}
+
+@media (max-width: 40.0525em) {
+  .report-issue {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-left: 8px;
+    padding: 8px 0;
+  }
+}

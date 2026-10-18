@@ -174,6 +174,10 @@ id: chrome.menu
 en: Menu
 bn: মেনু
 
+id: chrome.issue
+en: Report a problem
+bn: সমস্যা জানান
+
 id: lesson.deal
 en: Deal a hand
 bn: এক হাত ভাগ করুন

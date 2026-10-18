@@ -55,6 +55,8 @@
       link.dataset.label = tx(key, fallback);
     });
     document.querySelector("#install").textContent = tx("action.install", "Install");
+    const report = document.querySelector("#report");
+    if (report) report.textContent = tx("chrome.issue", "Report a problem");
     const menu = document.querySelector(".govuk-service-navigation__toggle");
     if (menu) menu.textContent = tx("chrome.menu", "Menu");
     const legend = document.querySelector(".govuk-generic-header .legend");
