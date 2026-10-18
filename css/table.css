@@ -457,9 +457,16 @@ button.card,
   cursor: pointer;
 }
 
-.seat.south .card.playable:hover {
-  transform: translateY(-8px);
-  z-index: 3;
+@media (hover: hover) and (pointer: fine) {
+  .seat.south .card.playable:hover {
+    transform: translateY(-8px);
+    z-index: 3;
+  }
+}
+
+.seat.south .card.playable:active {
+  transform: translateY(-10px);
+  z-index: 5;
 }
 
 .trick-slot .card {
@@ -595,20 +602,94 @@ button.card,
 }
 
 @media (max-width: 40.0525em) {
+  /* Logo + points stay on one row; language sits beside Menu. */
   .govuk-generic-header__container {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .govuk-generic-header__logo {
+    flex: 0 0 auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .govuk-generic-header .legend {
-    flex: 1 0 100%;
-    margin: 0 0 10px;
-    white-space: normal;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+
+  .govuk-service-navigation__inlining-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .govuk-service-navigation__container {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .mast-end {
+    width: auto;
+    margin: 0;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    gap: 0;
+  }
+
+  /* Only the other language — one short switch, not English | বাংলা. */
+  .govuk-language-navigation__list-item:has(.govuk-language-navigation__text) {
+    display: none;
+  }
+
+  .govuk-language-navigation__list-item {
+    border-right: none;
+    padding-right: 0;
+    margin-right: 0;
+  }
+
+  .govuk-service-navigation__toggle {
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 12px 8px 0;
+  }
+
+  .govuk-service-navigation__item {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .govuk-service-navigation__link,
+  .report-issue {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
     width: 100%;
-    margin: 0 0 10px;
-    justify-content: flex-start;
+    min-height: 44px;
+    padding: 8px 0;
+    margin: 0;
+  }
+
+  .govuk-language-navigation__link,
+  #install {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 4px;
+  }
+
+  #install {
+    margin-left: 6px;
   }
 }
 
@@ -660,8 +741,28 @@ button.card,
     margin-top: -56px;
   }
 
+  .seat.south {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-inline: 2px;
+  }
+
+  .seat.south .fan {
+    --hand-card: 52px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Fill the seat, and overlap only when eight cards would not fit as separate targets. */
   .seat.south .fan .card + .card {
-    margin-left: -24px;
+    margin-left: min(4px, calc((100% - var(--hand-count, 8) * var(--hand-card)) / (var(--hand-count, 8) - 1)));
+  }
+
+  .seat.south .fan .card {
+    flex: 0 0 auto;
+    touch-action: manipulation;
   }
 
   .seat.north .fan .card + .card {
@@ -683,7 +784,8 @@ button.card,
     animation: none;
   }
 
-  .seat.south .card.playable:hover {
+  .seat.south .card.playable:hover,
+  .seat.south .card.playable:active {
     transform: none;
   }
 }
@@ -693,18 +795,14 @@ button.card,
     flex-grow: 0;
   }
 
-  .report-issue {
-    margin-left: 32px;
-    padding: 15px 0;
+  .report-issue-item {
+    margin-left: 16px;
   }
-}
 
-@media (max-width: 40.0525em) {
   .report-issue {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
-    margin: 0 0 10px;
-    padding: 8px 0;
+    margin-left: 16px;
+    padding: 15px 0;
   }
 }

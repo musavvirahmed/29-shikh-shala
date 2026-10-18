@@ -72,7 +72,13 @@
 
   function fan(cards, opts) {
     if (!cards.length) return '<div class="fan empty"></div>';
-    return '<div class="fan">' + cards.map((card) => cardHTML(card, opts.forCard ? opts.forCard(card) : {})).join("") + "</div>";
+    return (
+      '<div class="fan" style="--hand-count:' +
+      cards.length +
+      '">' +
+      cards.map((card) => cardHTML(card, opts.forCard ? opts.forCard(card) : {})).join("") +
+      "</div>"
+    );
   }
 
   function seatHTML(seat, view, opts) {
