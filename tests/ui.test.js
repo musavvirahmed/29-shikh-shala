@@ -59,8 +59,10 @@ test("mobile chrome keeps language as a single switch beside Menu", () => {
   const mobile = css.match(/@media\s*\(max-width:\s*40\.0525em\)\s*\{([\s\S]*?)\n\}/);
   assert.ok(mobile, "expected the mobile header media query");
   assert.match(mobile[1], /language-navigation__list-item:has\(\.govuk-language-navigation__text\)/);
+  assert.match(mobile[1], /language-navigation__list-item:not\(:last-child\):after/);
   assert.match(mobile[1], /service-navigation__inlining-container[\s\S]*flex-wrap:\s*nowrap/);
   assert.match(mobile[1], /\.legend\s*\{[^}]*text-align:\s*right/);
+  assert.match(mobile[1], /\.govuk-service-navigation__toggle\s*\{[^}]*width:\s*100%/);
 });
 
 test("a fan records its card count so a phone can spread the hand", () => {

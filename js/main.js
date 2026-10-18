@@ -16,7 +16,7 @@
   };
 
   const state = {
-    mode: "learn",
+    mode: "play",
     section: null,
     lesson: 0,
     step: 0,
@@ -737,7 +737,8 @@
     const menu = menuId && document.getElementById(menuId);
     if (!menu) return;
 
-    let open = false;
+    // Start open on mobile so Learn is visible beside default Play.
+    let open = true;
     const rootStyles = getComputedStyle(document.documentElement);
     const tablet = rootStyles.getPropertyValue("--govuk-breakpoint-tablet").trim() || "40.0625rem";
     const mql = window.matchMedia("(min-width: " + tablet + ")");
@@ -768,7 +769,7 @@
 
   initServiceNavigation();
 
-  applyRoute(Rules.parseHash(location.hash) || { mode: "learn", section: null }, true);
+  applyRoute(Rules.parseHash(location.hash) || { mode: "play", section: null }, true);
 
   window.addEventListener("hashchange", () => {
     const route = Rules.parseHash(location.hash);

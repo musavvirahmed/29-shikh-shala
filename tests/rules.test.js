@@ -13,7 +13,7 @@ function esc(value) {
 }
 
 test("parseHash reads mode and rules section", () => {
-  assert.deepEqual(Rules.parseHash(""), { mode: "learn", section: null });
+  assert.deepEqual(Rules.parseHash(""), { mode: "play", section: null });
   assert.deepEqual(Rules.parseHash("#learn"), { mode: "learn", section: null });
   assert.deepEqual(Rules.parseHash("#play"), { mode: "play", section: null });
   assert.deepEqual(Rules.parseHash("#rules"), { mode: "rules", section: null });

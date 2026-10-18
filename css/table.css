@@ -675,10 +675,24 @@ button.card,
     margin-right: 0;
   }
 
+  /* GOV.UK puts the | on :after of every non-last item; with the
+     current language hidden, English is still not :last-child. */
+  .govuk-language-navigation__list-item:not(:last-child):after {
+    display: none;
+  }
+
+  .govuk-service-navigation__wrapper {
+    width: 100%;
+  }
+
   .govuk-service-navigation__toggle {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
     min-height: 44px;
     margin: 0;
     padding: 8px 12px 8px 0;
+    justify-content: flex-start;
   }
 
   .govuk-service-navigation__item {

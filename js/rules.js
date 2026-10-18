@@ -8,7 +8,7 @@
 
   function parseHash(hash) {
     const raw = String(hash || "").replace(/^#/, "");
-    if (!raw) return { mode: "learn", section: null };
+    if (!raw) return { mode: "play", section: null };
     if (MODES[raw]) return { mode: raw, section: null };
     const match = /^rules-([a-z]+)$/.exec(raw);
     if (match && SECTIONS.indexOf(match[1]) !== -1) return { mode: "rules", section: match[1] };
