@@ -98,9 +98,13 @@ main.govuk-main-wrapper {
 }
 
 .govuk-generic-header .legend {
+  flex: 0 1 auto;
   margin: 0 0 0 auto;
   color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.25;
   white-space: nowrap;
+  text-align: right;
 }
 
 html[lang="bn"] {
@@ -110,8 +114,7 @@ html[lang="bn"] {
 .mast-end {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px 0;
+  flex-wrap: nowrap;
   margin: 10px 0 10px auto;
 }
 
@@ -123,8 +126,23 @@ html[lang="bn"] {
   row-gap: 0;
 }
 
-#install {
-  margin-left: 16px;
+.site-footer {
+  padding-bottom: 24px;
+}
+
+.site-footer__fineprint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #505a5f;
+}
+
+.site-footer__fineprint .govuk-link {
+  color: #505a5f;
 }
 
 .layout {
@@ -602,10 +620,11 @@ button.card,
 }
 
 @media (max-width: 40.0525em) {
-  /* Logo + points stay on one row; language sits beside Menu. */
+  /* Logo left, points top-right — one green row. Language alone beside Menu. */
   .govuk-generic-header__container {
     flex-wrap: nowrap;
-    gap: 10px;
+    align-items: center;
+    gap: 8px;
   }
 
   .govuk-generic-header__logo {
@@ -618,8 +637,8 @@ button.card,
     flex: 1 1 auto;
     min-width: 0;
     margin: 0;
-    font-size: 0.8125rem;
-    line-height: 1.3;
+    font-size: 0.75rem;
+    line-height: 1.25;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -643,8 +662,6 @@ button.card,
     width: auto;
     margin: 0;
     flex: 0 0 auto;
-    justify-content: flex-end;
-    gap: 0;
   }
 
   /* Only the other language — one short switch, not English | বাংলা. */
@@ -669,27 +686,24 @@ button.card,
     margin-bottom: 0;
   }
 
-  .govuk-service-navigation__link,
-  .report-issue {
+  .govuk-service-navigation__link {
     display: flex;
     align-items: center;
     box-sizing: border-box;
     width: 100%;
     min-height: 44px;
     padding: 8px 0;
-    margin: 0;
   }
 
-  .govuk-language-navigation__link,
-  #install {
+  .govuk-language-navigation__link {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
     padding: 8px 4px;
   }
 
-  #install {
-    margin-left: 6px;
+  .site-footer {
+    padding-bottom: 20px;
   }
 }
 
@@ -793,16 +807,5 @@ button.card,
 @media (min-width: 40.0625em) {
   .govuk-service-navigation__container .govuk-service-navigation__wrapper {
     flex-grow: 0;
-  }
-
-  .report-issue-item {
-    margin-left: 16px;
-  }
-
-  .report-issue {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 16px;
-    padding: 15px 0;
   }
 }

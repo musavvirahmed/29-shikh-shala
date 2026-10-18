@@ -33,7 +33,7 @@ test("the point lookup legend stays visible on mobile", () => {
   const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
   const css = fs.readFileSync(path.join(__dirname, "../css/table.css"), "utf8");
 
-  assert.match(html, /class="govuk-body-s legend"/);
+  assert.match(html, /class="legend"/);
   assert.match(html, /Jack 3, nine 2, ace 1, ten 1, others 0/);
 
   const mobile = css.match(/@media\s*\(max-width:\s*40\.0525em\)\s*\{([\s\S]*?)\n\}/);
@@ -47,13 +47,20 @@ test("mobile chrome keeps language as a single switch beside Menu", () => {
   const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
   const css = fs.readFileSync(path.join(__dirname, "../css/table.css"), "utf8");
 
-  assert.match(html, /id="navigation"[\s\S]*id="report"/);
-  assert.doesNotMatch(html, /<\/nav>\s*<a id="report"/);
+  assert.match(html, /class="site-footer"[\s\S]*id="report"[\s\S]*id="install"/);
+  const nav = html.match(/id="navigation"[\s\S]*?<\/ul>/);
+  assert.ok(nav, "expected the service navigation list");
+  assert.doesNotMatch(nav[0], /id="report"/);
+  const mastEnd = html.match(/class="mast-end"[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/);
+  assert.ok(mastEnd, "expected mast-end inside service navigation");
+  assert.match(mastEnd[0], /govuk-language-navigation/);
+  assert.doesNotMatch(mastEnd[0], /id="install"/);
 
   const mobile = css.match(/@media\s*\(max-width:\s*40\.0525em\)\s*\{([\s\S]*?)\n\}/);
   assert.ok(mobile, "expected the mobile header media query");
   assert.match(mobile[1], /language-navigation__list-item:has\(\.govuk-language-navigation__text\)/);
   assert.match(mobile[1], /service-navigation__inlining-container[\s\S]*flex-wrap:\s*nowrap/);
+  assert.match(mobile[1], /\.legend\s*\{[^}]*text-align:\s*right/);
 });
 
 test("a fan records its card count so a phone can spread the hand", () => {
