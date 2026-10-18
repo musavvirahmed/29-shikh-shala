@@ -1,7 +1,6 @@
 # 29 শিখ শালা
 
-![Learn](learn.png)
-![Play](play.png)
+<img src="learn.png" alt="Learn" width="390"> <img src="play.png" alt="Play" width="390">
 
 A table that teaches the Bangladeshi card game 29. Play it at https://musavvirahmed.github.io/29-shikh-shala/
 
